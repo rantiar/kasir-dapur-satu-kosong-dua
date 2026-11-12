@@ -1098,6 +1098,15 @@ export default function App() {
                 <h3 className="font-black text-xl">Edit Menu</h3>
                 <button type="button" onClick={() => { setEditingMenu(null); setModal("manage"); }} className="p-2 bg-[#f2e9df] rounded-full"><X size={18} /></button>
               </div>
+              <div className="space-y-1">
+                <span className="block text-xs font-bold">Foto Menu (opsional)</span>
+                <label className="flex items-center gap-3 p-3 rounded-xl border border-dashed border-[#d6c4b4] bg-[#fbf6ef] cursor-pointer">
+                  {editingMenu.image || menuImages[editingMenu.id] ? <img src={editingMenu.image || menuImages[editingMenu.id]} alt="Pratinjau foto menu" className="w-16 h-16 object-cover rounded-lg" /> : <span className="w-16 h-16 rounded-lg bg-[#f2e9df] flex items-center justify-center text-[#ad5d42]"><ImagePlus size={24} /></span>}
+                  <span className="text-xs text-[#665143]">{savingMenuImage ? "Memproses foto..." : "Pilih atau ganti foto dari galeri HP"}</span>
+                  <input type="file" accept="image/*" onChange={(event) => handleMenuPhoto(event, "edit")} className="hidden" />
+                </label>
+                {(editingMenu.image || menuImages[editingMenu.id]) && <button type="button" onClick={() => setEditingMenu({ ...editingMenu, image: null })} className="text-xs text-[#ad5d42] font-bold">Hapus foto menu</button>}
+              </div>
               <label className="block text-xs font-bold">
                 Nama
                 <input required value={editingMenu.name} onChange={(event) => setEditingMenu({ ...editingMenu, name: event.target.value })} className="w-full mt-1 p-3 bg-[#fbf6ef] border rounded-xl text-sm font-normal" />
