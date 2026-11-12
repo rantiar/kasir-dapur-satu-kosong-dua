@@ -64,9 +64,21 @@ export default function App() {
   const [editingMenu, setEditingMenu] = useState(null);
   const [toast, setToast] = useState("");
   const [receipt, setReceipt] = useState(null);
+const [qrisImage, setQrisImage] = useState(
+  () => readStore("d102_qris_image", "")
+);
+
+const [paymentMethod, setPaymentMethod] = useState("Tunai");
 
   useEffect(() => { localStorage.setItem("d102_menu_v2", JSON.stringify(menu)); }, [menu]);
   useEffect(() => { localStorage.setItem("d102_orders_v2", JSON.stringify(orders)); }, [orders]);
+useEffect(() => {
+  try {
+    localStorage.setItem("d102_qris_image", qrisImage);
+  } catch {
+    setToast("Ukuran gambar QRIS terlalu besar");
+  }
+}, [qrisImage]);
   useEffect(() => {
     if (!toast) return;
     const t = setTimeout(() => setToast(""), 2600);
