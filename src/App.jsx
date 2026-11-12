@@ -519,7 +519,7 @@ export default function App() {
     <button
       onClick={() => setPage(id)}
       className={`flex-1 flex flex-col items-center gap-1 py-2 text-xs font-bold ${
-        page === id ? "text-red-600" : "text-neutral-400"
+        page === id ? "text-[#ad5d42]" : "text-neutral-400"
       }`}
     >
       <Icon size={20} />{label}
@@ -535,7 +535,7 @@ export default function App() {
   return (
     <div className="min-h-screen bg-neutral-900 flex items-center justify-center font-sans sm:p-4">
       <div className="w-full h-[100dvh] sm:h-[880px] max-w-md bg-neutral-50 sm:rounded-[2rem] sm:border-[8px] border-neutral-800 shadow-2xl relative overflow-hidden flex flex-col">
-        <header className="bg-red-600 text-white pt-8 pb-4 px-5 rounded-b-2xl shadow-md z-10 shrink-0">
+        <header className="bg-[#ad5d42] text-white pt-8 pb-4 px-5 rounded-b-2xl shadow-md z-10 shrink-0">
           <div className="flex items-center justify-between gap-3">
             <div className="flex items-center gap-3">
               <div className="bg-white/20 p-2.5 rounded-xl">
@@ -543,7 +543,7 @@ export default function App() {
               </div>
               <div>
                 <h1 className="font-extrabold text-lg leading-tight">Dapur Satu Kosong Dua</h1>
-                <p className="text-red-100 text-xs">Kasir POS • Siap melayani</p>
+                <p className="text-[#f0d9ce] text-xs">Kasir POS • Siap melayani</p>
               </div>
             </div>
             <button
@@ -564,7 +564,7 @@ export default function App() {
                 value={search}
                 onChange={(event) => setSearch(event.target.value)}
                 placeholder="Cari menu..."
-                className="w-full pl-9 pr-3 py-2.5 rounded-xl border border-neutral-200 bg-white text-sm outline-none focus:ring-2 focus:ring-red-400"
+                className="w-full pl-9 pr-3 py-2.5 rounded-xl border border-neutral-200 bg-white text-sm outline-none focus:ring-2 focus:ring-[#ce876b]"
               />
             </div>
             <div className="flex gap-2 overflow-x-auto no-scrollbar pb-3">
@@ -573,7 +573,7 @@ export default function App() {
                   key={item}
                   onClick={() => setCategory(item)}
                   className={`whitespace-nowrap px-4 py-2 rounded-full text-xs font-bold ${
-                    category === item ? "bg-red-600 text-white" : "bg-white text-neutral-600 border border-neutral-200"
+                    category === item ? "bg-[#ad5d42] text-white" : "bg-white text-neutral-600 border border-neutral-200"
                   }`}
                 >
                   {item}
@@ -590,18 +590,18 @@ export default function App() {
                 return (
                   <div key={item.id} className="bg-white rounded-2xl p-3.5 shadow-sm border border-neutral-100 flex flex-col min-h-[132px] relative">
                     {qty > 0 && (
-                      <span className="absolute -top-2 -right-2 w-7 h-7 bg-red-500 text-white rounded-full flex items-center justify-center font-bold text-xs">
+                      <span className="absolute -top-2 -right-2 w-7 h-7 bg-[#f8eee8]0 text-white rounded-full flex items-center justify-center font-bold text-xs">
                         {qty}
                       </span>
                     )}
                     <div className="flex-1 mb-3">
-                      <p className="text-[9px] font-extrabold text-red-500 mb-1 uppercase tracking-wide">{item.category}</p>
+                      <p className="text-[9px] font-extrabold text-[#f8eee8]0 mb-1 uppercase tracking-wide">{item.category}</p>
                       <h3 className="font-bold text-neutral-800 text-sm leading-snug">{item.name}</h3>
                       <p className="text-neutral-500 font-bold text-sm mt-1">{money(item.price)}</p>
                     </div>
                     <button
                       onClick={() => selectMenu(item)}
-                      className="w-full py-2.5 bg-neutral-100 text-neutral-700 font-bold text-xs rounded-xl hover:bg-red-50 hover:text-red-600 active:scale-95"
+                      className="w-full py-2.5 bg-neutral-100 text-neutral-700 font-bold text-xs rounded-xl hover:bg-[#f8eee8] hover:text-[#ad5d42] active:scale-95"
                     >
                       + Tambah
                     </button>
@@ -624,17 +624,17 @@ export default function App() {
             <div className="absolute bottom-[68px] left-4 right-4 z-20">
               <button
                 onClick={openCart}
-                className="w-full bg-red-600 text-white p-4 rounded-2xl shadow-xl flex items-center justify-between active:scale-[.98]"
+                className="w-full bg-[#ad5d42] text-white p-4 rounded-2xl shadow-xl flex items-center justify-between active:scale-[.98]"
               >
                 <div className="flex items-center gap-3">
                   <div className="relative">
                     <ShoppingCart size={23} />
-                    <span className="absolute -top-2 -right-2 bg-white text-red-600 w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-black">
+                    <span className="absolute -top-2 -right-2 bg-white text-[#ad5d42] w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-black">
                       {totalItems}
                     </span>
                   </div>
                   <div className="text-left">
-                    <p className="text-red-100 text-[10px]">Total Pesanan</p>
+                    <p className="text-[#f0d9ce] text-[10px]">Total Pesanan</p>
                     <p className="font-black text-lg leading-none">{money(total)}</p>
                   </div>
                 </div>
@@ -663,7 +663,7 @@ export default function App() {
                 >
                   <div className="flex justify-between gap-2">
                     <span className="font-extrabold text-sm text-neutral-800">{new Date(order.date).toLocaleString("id-ID")}</span>
-                    <span className="font-black text-red-600 text-sm">{money(order.total)}</span>
+                    <span className="font-black text-[#ad5d42] text-sm">{money(order.total)}</span>
                   </div>
                   <p className="text-xs text-neutral-500 mt-1">
                     {order.items.reduce((sum, row) => sum + row.qty, 0)} item • {method}
@@ -682,12 +682,12 @@ export default function App() {
             <div className="grid grid-cols-2 gap-3 mb-4">
               <div className="bg-white rounded-2xl p-4 border border-neutral-100">
                 <p className="text-xs text-neutral-500 font-semibold">Omzet Hari Ini</p>
-                <p className="font-black text-lg text-red-600 mt-1">{money(todaySales)}</p>
+                <p className="font-black text-lg text-[#ad5d42] mt-1">{money(todaySales)}</p>
                 <p className="text-[10px] text-neutral-400">{todayOrders.length} transaksi</p>
               </div>
               <div className="bg-white rounded-2xl p-4 border border-neutral-100">
                 <p className="text-xs text-neutral-500 font-semibold">Laba Hari Ini*</p>
-                <p className="font-black text-lg text-green-600 mt-1">{money(todayProfit)}</p>
+                <p className="font-black text-lg text-[#76503f] mt-1">{money(todayProfit)}</p>
                 <p className="text-[10px] text-neutral-400">Berdasarkan HPP menu</p>
               </div>
               <div className="bg-white rounded-2xl p-4 border border-neutral-100">
@@ -697,7 +697,7 @@ export default function App() {
               </div>
               <div className="bg-white rounded-2xl p-4 border border-neutral-100">
                 <p className="text-xs text-neutral-500 font-semibold">Laba Bulan Ini*</p>
-                <p className="font-black text-lg text-green-600 mt-1">{money(monthProfit)}</p>
+                <p className="font-black text-lg text-[#76503f] mt-1">{money(monthProfit)}</p>
                 <p className="text-[10px] text-neutral-400">Berdasarkan HPP menu</p>
               </div>
               <div className="bg-white rounded-2xl p-4 border border-neutral-100">
@@ -707,7 +707,7 @@ export default function App() {
               </div>
               <div className="bg-white rounded-2xl p-4 border border-neutral-100">
                 <p className="text-xs text-neutral-500 font-semibold">Estimasi Laba*</p>
-                <p className="font-black text-lg text-green-600 mt-1">{money(allProfit)}</p>
+                <p className="font-black text-lg text-[#76503f] mt-1">{money(allProfit)}</p>
                 <p className="text-[10px] text-neutral-400">Seluruh riwayat</p>
               </div>
             </div>
@@ -744,7 +744,7 @@ export default function App() {
                     key={level}
                     onClick={() => setSpicyLevel(level)}
                     className={`rounded-xl py-4 font-black border ${
-                      spicyLevel === level ? "bg-red-600 text-white border-red-600" : "bg-white text-neutral-600 border-neutral-200"
+                      spicyLevel === level ? "bg-[#ad5d42] text-white border-[#ad5d42]" : "bg-white text-neutral-600 border-neutral-200"
                     }`}
                   >
                     <Flame className="mx-auto mb-1" size={20} /><span>Level {level}</span>
@@ -753,7 +753,7 @@ export default function App() {
               </div>
               <button
                 onClick={() => { addItem(spicyItem, spicyLevel); setModal(""); }}
-                className="w-full bg-red-600 text-white py-3.5 rounded-xl font-bold"
+                className="w-full bg-[#ad5d42] text-white py-3.5 rounded-xl font-bold"
               >
                 Tambah ke Keranjang
               </button>
@@ -785,7 +785,7 @@ export default function App() {
                     <div className="flex items-center gap-2">
                       <button onClick={() => changeQty(row.key, -1)} className="w-8 h-8 rounded-lg bg-neutral-100 flex items-center justify-center"><Minus size={15} /></button>
                       <b className="text-sm">{row.qty}</b>
-                      <button onClick={() => changeQty(row.key, 1)} className="w-8 h-8 rounded-lg bg-red-600 text-white flex items-center justify-center"><Plus size={15} /></button>
+                      <button onClick={() => changeQty(row.key, 1)} className="w-8 h-8 rounded-lg bg-[#ad5d42] text-white flex items-center justify-center"><Plus size={15} /></button>
                     </div>
                     <b className="text-sm">{money(row.price * row.qty)}</b>
                   </div>
@@ -803,7 +803,7 @@ export default function App() {
                   <button
                     onClick={() => choosePayment("Tunai")}
                     className={`flex items-center justify-center gap-2 py-3 rounded-xl border font-bold text-sm ${
-                      paymentMethod === "Tunai" ? "bg-red-600 text-white border-red-600" : "bg-white text-neutral-600 border-neutral-200"
+                      paymentMethod === "Tunai" ? "bg-[#ad5d42] text-white border-[#ad5d42]" : "bg-white text-neutral-600 border-neutral-200"
                     }`}
                   >
                     <Wallet size={18} /> Tunai
@@ -811,7 +811,7 @@ export default function App() {
                   <button
                     onClick={() => choosePayment("QRIS")}
                     className={`flex items-center justify-center gap-2 py-3 rounded-xl border font-bold text-sm ${
-                      paymentMethod === "QRIS" ? "bg-red-600 text-white border-red-600" : "bg-white text-neutral-600 border-neutral-200"
+                      paymentMethod === "QRIS" ? "bg-[#ad5d42] text-white border-[#ad5d42]" : "bg-white text-neutral-600 border-neutral-200"
                     }`}
                   >
                     <QrCode size={18} /> QRIS
@@ -826,7 +826,7 @@ export default function App() {
                       onChange={(event) => setCash(digits(event.target.value))}
                       inputMode="numeric"
                       placeholder="Masukkan nominal uang"
-                      className="w-full bg-white border border-neutral-200 rounded-xl p-3 text-right font-bold text-lg outline-none focus:ring-2 focus:ring-red-400"
+                      className="w-full bg-white border border-neutral-200 rounded-xl p-3 text-right font-bold text-lg outline-none focus:ring-2 focus:ring-[#ce876b]"
                     />
                     <div className="grid grid-cols-4 gap-2 mt-2">
                       {[['Pas', total], ["20rb", 20000], ["50rb", 50000], ["100rb", 100000]].map(([label, value]) => (
@@ -837,7 +837,7 @@ export default function App() {
                     </div>
                     <div className="flex justify-between p-3 bg-white border rounded-xl mt-3 mb-4">
                       <span className="text-sm text-neutral-500 font-semibold">Kembalian</span>
-                      <b className={change >= 0 && cashAmount ? "text-green-600" : "text-neutral-400"}>
+                      <b className={change >= 0 && cashAmount ? "text-[#76503f]" : "text-neutral-400"}>
                         {cashAmount ? money(Math.max(0, change)) : "—"}
                       </b>
                     </div>
@@ -859,9 +859,9 @@ export default function App() {
                         QRIS belum diunggah. Buka Pengaturan untuk mengunggah gambar QRIS.
                       </div>
                     )}
-                    <div className="text-center bg-red-50 rounded-xl p-3">
-                      <p className="text-xs text-red-600 font-semibold">Total yang harus dibayar</p>
-                      <p className="text-2xl font-black text-red-600">{money(total)}</p>
+                    <div className="text-center bg-[#f8eee8] rounded-xl p-3">
+                      <p className="text-xs text-[#ad5d42] font-semibold">Total yang harus dibayar</p>
+                      <p className="text-2xl font-black text-[#ad5d42]">{money(total)}</p>
                     </div>
                     <label className={`mt-3 flex items-start gap-2 text-xs leading-relaxed ${
                       qrisImage ? "text-neutral-700" : "text-neutral-400"
@@ -871,7 +871,7 @@ export default function App() {
                         checked={qrisConfirmed}
                         disabled={!qrisImage}
                         onChange={(event) => setQrisConfirmed(event.target.checked)}
-                        className="mt-0.5 accent-red-600"
+                        className="mt-0.5 accent-[#ad5d42]"
                       />
                       <span>Saya sudah mengecek aplikasi DANA dan memastikan pembayaran QRIS benar-benar masuk.</span>
                     </label>
@@ -885,7 +885,7 @@ export default function App() {
                 <button
                   disabled={!canPay}
                   onClick={finishPayment}
-                  className="w-full py-4 rounded-xl bg-red-600 text-white font-black disabled:bg-neutral-200 disabled:text-neutral-400"
+                  className="w-full py-4 rounded-xl bg-[#ad5d42] text-white font-black disabled:bg-neutral-200 disabled:text-neutral-400"
                 >
                   {paymentMethod === "QRIS" ? "Konfirmasi & Selesaikan Transaksi" : "Selesaikan Transaksi"}
                 </button>
@@ -920,7 +920,7 @@ export default function App() {
                 Modal / HPP per porsi (Rp)
                 <input inputMode="numeric" value={newMenu.cost ? Number(digits(newMenu.cost)).toLocaleString("id-ID") : ""} onChange={(event) => setNewMenu({ ...newMenu, cost: digits(event.target.value) })} className="w-full mt-1 p-3 bg-neutral-50 border rounded-xl text-sm" placeholder="Isi agar laba terhitung" />
               </label>
-              <button className="w-full bg-red-600 text-white py-3.5 rounded-xl font-bold">Simpan Menu</button>
+              <button className="w-full bg-[#ad5d42] text-white py-3.5 rounded-xl font-bold">Simpan Menu</button>
             </form>
           </div>
         )}
@@ -942,7 +942,7 @@ export default function App() {
               ) : qrisImage ? (
                 <div className="border rounded-2xl p-3">
                   <img src={qrisImage} alt="QRIS tersimpan" className="w-full max-h-72 object-contain rounded-xl" />
-                  <p className="text-center text-xs text-green-600 font-bold mt-2">QRIS tersimpan di perangkat ini</p>
+                  <p className="text-center text-xs text-[#76503f] font-bold mt-2">QRIS tersimpan di perangkat ini</p>
                 </div>
               ) : (
                 <div className="border-2 border-dashed rounded-2xl p-8 text-center text-neutral-400">
@@ -952,14 +952,14 @@ export default function App() {
                 </div>
               )}
 
-              <label className={`flex items-center justify-center gap-2 w-full text-center bg-red-600 text-white py-3 rounded-xl font-bold cursor-pointer ${savingQris ? "opacity-60 pointer-events-none" : ""}`}>
+              <label className={`flex items-center justify-center gap-2 w-full text-center bg-[#ad5d42] text-white py-3 rounded-xl font-bold cursor-pointer ${savingQris ? "opacity-60 pointer-events-none" : ""}`}>
                 <ImagePlus size={18} />
                 {savingQris ? "Menyimpan..." : qrisImage ? "Ganti Gambar QRIS" : "Unggah QRIS dari Galeri"}
                 <input type="file" accept="image/*" className="hidden" disabled={savingQris} onChange={handleQrisUpload} />
               </label>
 
               {qrisImage && (
-                <button onClick={deleteQris} className="w-full py-3 rounded-xl border border-red-200 text-red-600 font-bold text-sm">
+                <button onClick={deleteQris} className="w-full py-3 rounded-xl border border-[#e6c0b1] text-[#ad5d42] font-bold text-sm">
                   Hapus Gambar QRIS
                 </button>
               )}
@@ -992,12 +992,12 @@ export default function App() {
                     type="button"
                     onClick={backupData}
                     disabled={qrisLoading || savingQris}
-                    className="bg-green-600 disabled:bg-neutral-300 text-white rounded-xl p-4 flex flex-col items-center gap-2 font-bold text-xs"
+                    className="bg-[#76503f] disabled:bg-neutral-300 text-white rounded-xl p-4 flex flex-col items-center gap-2 font-bold text-xs"
                   >
                     <Download size={24} />
                     Backup Data
                   </button>
-                  <label className="bg-blue-600 text-white rounded-xl p-4 flex flex-col items-center gap-2 font-bold text-xs cursor-pointer">
+                  <label className="bg-[#ad5d42] text-white rounded-xl p-4 flex flex-col items-center gap-2 font-bold text-xs cursor-pointer">
                     <Upload size={24} />
                     Restore Data
                     <input
@@ -1015,15 +1015,15 @@ export default function App() {
               </div>
 
               <div className="p-4 border-b">
-                <button onClick={() => setModal("qris")} className="w-full flex items-center justify-between gap-3 bg-red-50 border border-red-100 rounded-xl p-4 text-left">
+                <button onClick={() => setModal("qris")} className="w-full flex items-center justify-between gap-3 bg-[#f8eee8] border border-[#f0d9ce] rounded-xl p-4 text-left">
                   <span className="flex items-center gap-3">
-                    <span className="bg-red-600 text-white p-2 rounded-lg"><QrCode size={20} /></span>
+                    <span className="bg-[#ad5d42] text-white p-2 rounded-lg"><QrCode size={20} /></span>
                     <span>
                       <span className="block font-black text-sm text-neutral-800">Pengaturan QRIS</span>
                       <span className="block text-xs text-neutral-500">{qrisImage ? "Gambar QRIS sudah tersedia" : "Unggah gambar QRIS dari galeri"}</span>
                     </span>
                   </span>
-                  <span className="text-red-600 text-xs font-bold">Buka</span>
+                  <span className="text-[#ad5d42] text-xs font-bold">Buka</span>
                 </button>
               </div>
               <div className="px-5 pt-3 pb-1">
@@ -1038,14 +1038,14 @@ export default function App() {
                       <p className="text-[10px] text-neutral-500">{item.category} • Jual {money(item.price)} • HPP {money(item.cost)}</p>
                     </div>
                     <div className="flex gap-1 shrink-0">
-                      <button onClick={() => { setEditingMenu({ ...item, price: String(item.price), cost: String(item.cost) }); setModal("edit"); }} className="p-2 bg-white border rounded-lg text-blue-600"><Pencil size={16} /></button>
-                      <button onClick={() => removeMenu(item.id)} className="p-2 bg-white border rounded-lg text-red-500"><Trash2 size={16} /></button>
+                      <button onClick={() => { setEditingMenu({ ...item, price: String(item.price), cost: String(item.cost) }); setModal("edit"); }} className="p-2 bg-white border rounded-lg text-[#ad5d42]"><Pencil size={16} /></button>
+                      <button onClick={() => removeMenu(item.id)} className="p-2 bg-white border rounded-lg text-[#f8eee8]0"><Trash2 size={16} /></button>
                     </div>
                   </div>
                 ))}
               </div>
               <div className="p-4 border-t">
-                <button onClick={() => setModal("add")} className="w-full bg-red-600 text-white rounded-xl py-3 font-bold">+ Tambah Menu Baru</button>
+                <button onClick={() => setModal("add")} className="w-full bg-[#ad5d42] text-white rounded-xl py-3 font-bold">+ Tambah Menu Baru</button>
               </div>
             </div>
           </div>
@@ -1077,7 +1077,7 @@ export default function App() {
                 Modal / HPP
                 <input inputMode="numeric" value={editingMenu.cost ? Number(digits(editingMenu.cost)).toLocaleString("id-ID") : ""} onChange={(event) => setEditingMenu({ ...editingMenu, cost: digits(event.target.value) })} className="w-full mt-1 p-3 bg-neutral-50 border rounded-xl text-sm" />
               </label>
-              <button className="w-full bg-red-600 text-white py-3.5 rounded-xl font-bold">Simpan Perubahan</button>
+              <button className="w-full bg-[#ad5d42] text-white py-3.5 rounded-xl font-bold">Simpan Perubahan</button>
             </form>
           </div>
         )}
@@ -1087,7 +1087,7 @@ export default function App() {
             <div className="absolute inset-0 bg-neutral-900/60" onClick={() => setReceipt(null)} />
             <div className="relative bg-white w-full rounded-3xl p-5 max-h-[85%] overflow-y-auto">
               <div className="text-center mb-4">
-                <div className="w-12 h-12 bg-green-100 text-green-600 rounded-full mx-auto flex items-center justify-center mb-2"><CheckCircle2 size={27} /></div>
+                <div className="w-12 h-12 bg-green-100 text-[#76503f] rounded-full mx-auto flex items-center justify-center mb-2"><CheckCircle2 size={27} /></div>
                 <h3 className="font-black text-xl">Detail Transaksi</h3>
                 <p className="text-[10px] text-neutral-400">{receipt.id}</p>
                 <p className="text-xs text-neutral-500">{new Date(receipt.date).toLocaleString("id-ID")}</p>
@@ -1108,12 +1108,12 @@ export default function App() {
                   <span>{money(receipt.cash ?? receipt.total)}</span>
                 </div>
                 {(receipt.paymentMethod || "Tunai") === "Tunai" && (
-                  <div className="flex justify-between text-green-600 font-bold">
+                  <div className="flex justify-between text-[#76503f] font-bold">
                     <span>Kembalian</span><span>{money(receipt.change)}</span>
                   </div>
                 )}
                 {(receipt.paymentMethod || "Tunai") === "QRIS" && (
-                  <p className="text-xs text-green-600 font-bold text-right">✓ Pembayaran telah dikonfirmasi kasir</p>
+                  <p className="text-xs text-[#76503f] font-bold text-right">✓ Pembayaran telah dikonfirmasi kasir</p>
                 )}
               </div>
               <button onClick={() => setReceipt(null)} className="w-full bg-neutral-900 text-white py-3 rounded-xl font-bold mt-2">Tutup</button>
