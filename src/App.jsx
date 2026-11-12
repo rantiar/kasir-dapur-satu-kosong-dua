@@ -178,6 +178,7 @@ export default function App() {
   const [category, setCategory] = useState("Semua");
   const [page, setPage] = useState("kasir");
   const [search, setSearch] = useState("");
+  const [historyDate, setHistoryDate] = useState("");
   const [cash, setCash] = useState("");
   const [modal, setModal] = useState("");
   const [spicyItem, setSpicyItem] = useState(null);
@@ -571,6 +572,29 @@ export default function App() {
   const monthProfit = monthOrders.reduce((sum, order) => sum + order.profit, 0);
   const allSales = orders.reduce((sum, order) => sum + order.total, 0);
   const allProfit = orders.reduce((sum, order) => sum + order.profit, 0);
+  const dateKey = (value) => {
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) return "Tanggal tidak diketahui";
+    return [date.getFullYear(), String(date.getMonth() + 1).padStart(2, "0"), String(date.getDate()).padStart(2, "0")].join("-");
+  };
+  const historyGroups = orders
+    .filter((order) => !historyDate || dateKey(order.date) === historyDate)
+    .slice()
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+    .reduce((groups, order) => {
+      const key = dateKey(order.date);
+      if (!groups[key]) groups[key] = [];
+      groups[key].push(order);
+      return groups;
+    }, {});
+  const historyGroupKeys = Object.keys(historyGroups).sort((a, b) => b.localeCompare(a));
+  const formatHistoryDate = (key) => {
+    if (key === "Tanggal tidak diketahui") return key;
+    const [year, month, day] = key.split("-").map(Number);
+    return new Date(year, month - 1, day).toLocaleDateString("id-ID", {
+      weekday: "long", day: "numeric", month: "long", year: "numeric"
+    });
+  };
 
   const NavButton = ({ id, icon: Icon, label }) => (
     <button
@@ -704,33 +728,55 @@ export default function App() {
 
         {page === "riwayat" && (
           <main className="flex-1 overflow-y-auto p-4 pb-20">
-            <h2 className="font-black text-xl text-[#493329] mb-1">Riwayat Transaksi</h2>
-            <p className="text-xs text-[#fbf6ef]0 mb-4">{orders.length} transaksi tersimpan di perangkat ini</p>
+            <div className="flex items-center justify-between gap-3 mb-3">
+              <div>
+                <h2 className="font-black text-xl text-[#493329] mb-1">Riwayat Transaksi</h2>
+                <p className="text-xs text-[#a58e7e]">{orders.length} transaksi tersimpan di perangkat ini</p>
+              </div>
+              {historyDate && <button onClick={() => setHistoryDate("")} className="text-xs font-bold text-[#ad5d42]">Reset tanggal</button>}
+            </div>
+            <label className="block mb-4">
+              <span className="block text-xs font-bold text-[#665143] mb-1">Cari transaksi berdasarkan tanggal</span>
+              <input type="date" value={historyDate} onChange={(event) => setHistoryDate(event.target.value)} className="w-full rounded-xl border border-[#e7d9cb] bg-white px-3 py-3 text-sm text-[#493329] outline-none focus:ring-2 focus:ring-[#ce876b]" />
+            </label>
             {orders.length === 0 ? (
               <div className="text-center py-16 text-[#a58e7e]">
                 <Receipt size={36} className="mx-auto mb-2" />
                 <p className="text-sm">Belum ada transaksi.</p>
               </div>
-            ) : orders.map((order) => {
-              const method = order.paymentMethod || "Tunai";
-              return (
-                <button
-                  key={order.id}
-                  onClick={() => setReceipt(order)}
-                  className="w-full bg-white rounded-2xl p-4 mb-3 text-left border border-[#f2e9df] shadow-sm"
-                >
-                  <div className="flex justify-between gap-2">
-                    <span className="font-extrabold text-sm text-[#493329]">{new Date(order.date).toLocaleString("id-ID")}</span>
-                    <span className="font-black text-[#ad5d42] text-sm">{money(order.total)}</span>
-                  </div>
-                  <p className="text-xs text-[#fbf6ef]0 mt-1">
-                    {order.items.reduce((sum, row) => sum + row.qty, 0)} item • {method}
-                    {method === "Tunai" ? ` • Kembali ${money(order.change)}` : " • Terbayar"}
-                  </p>
-                  <p className="text-[10px] text-[#a58e7e] mt-2">{order.id}</p>
-                </button>
-              );
-            })}
+            ) : historyGroupKeys.length === 0 ? (
+              <div className="text-center py-12 text-[#a58e7e]">
+                <Search size={30} className="mx-auto mb-2" />
+                <p className="text-sm">Tidak ada transaksi pada tanggal ini.</p>
+              </div>
+            ) : historyGroupKeys.map((groupKey) => (
+              <section key={groupKey} className="mb-5">
+                <div className="flex items-center justify-between gap-2 px-1 mb-2">
+                  <h3 className="font-extrabold text-sm text-[#8d4b36] capitalize">{formatHistoryDate(groupKey)}</h3>
+                  <span className="text-[10px] text-[#a58e7e]">{historyGroups[groupKey].length} transaksi</span>
+                </div>
+                {historyGroups[groupKey].map((order) => {
+                  const method = order.paymentMethod || "Tunai";
+                  return (
+                    <button
+                      key={order.id}
+                      onClick={() => setReceipt(order)}
+                      className="w-full bg-white rounded-2xl p-4 mb-2 text-left border border-[#f2e9df] shadow-sm"
+                    >
+                      <div className="flex justify-between gap-2">
+                        <span className="font-extrabold text-sm text-[#493329]">{new Date(order.date).toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit" })}</span>
+                        <span className="font-black text-[#ad5d42] text-sm">{money(order.total)}</span>
+                      </div>
+                      <p className="text-xs text-[#665143] mt-1">
+                        {order.items.reduce((sum, row) => sum + row.qty, 0)} item • {method}
+                        {method === "Tunai" ? ` • Kembali ${money(order.change)}` : " • Terbayar"}
+                      </p>
+                      <p className="text-[10px] text-[#a58e7e] mt-2">{order.id}</p>
+                    </button>
+                  );
+                })}
+              </section>
+            ))}
           </main>
         )}
 
