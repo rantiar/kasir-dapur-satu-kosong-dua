@@ -272,6 +272,68 @@ useEffect(() => {
           <button className="w-full bg-red-600 text-white py-3.5 rounded-xl font-bold">Simpan Menu</button>
         </form></div>}
 
+       {modal === "qris" && (
+  <div className="absolute inset-0 z-[60] flex items-center justify-center p-4">
+    <div
+      className="absolute inset-0 bg-neutral-900/60"
+      onClick={() => setModal("")}
+    />
+
+    <div className="relative bg-white w-full rounded-3xl p-5 space-y-4">
+      <div className="flex justify-between items-center">
+        <h3 className="font-black text-xl">QRIS Dapur Satu Kosong Dua</h3>
+        <button onClick={() => setModal("")}>
+          <X />
+        </button>
+      </div>
+
+      {qrisImage ? (
+        <img
+          src={qrisImage}
+          alt="QRIS Dapur Satu Kosong Dua"
+          className="w-full max-h-72 object-contain rounded-xl border p-2"
+        />
+      ) : (
+        <div className="border-2 border-dashed rounded-xl p-10 text-center text-neutral-400">
+          Belum ada gambar QRIS
+        </div>
+      )}
+
+      <label className="block w-full text-center bg-red-600 text-white py-3 rounded-xl font-bold cursor-pointer">
+        🖼️ Unggah / Ganti QRIS
+        <input
+          type="file"
+          accept="image/*"
+          className="hidden"
+          onChange={(e) => {
+            const file = e.target.files?.[0];
+            if (!file) return;
+
+            if (!file.type.startsWith("image/")) {
+              setToast("File harus berupa gambar");
+              return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = () => {
+              setQrisImage(reader.result);
+              setToast("QRIS berhasil diperbarui");
+            };
+            reader.readAsDataURL(file);
+            e.target.value = "";
+          }}
+        />
+      </label>
+
+      <button
+        onClick={() => setModal("")}
+        className="w-full bg-neutral-900 text-white py-3 rounded-xl font-bold"
+      >
+        Selesai
+      </button>
+    </div>
+  </div>
+)}
         {modal === "manage" && <div className="absolute inset-0 z-50 flex flex-col justify-end"><div className="absolute inset-0 bg-neutral-900/60" onClick={() => setModal("")}/><div className="relative bg-white rounded-t-3xl max-h-[88%] flex flex-col">
           <div className="p-5 border-b flex justify-between items-center"><div><h3 className="font-black text-xl">Kelola Menu</h3><p className="text-xs text-neutral-500">Ubah harga jual dan modal/HPP</p></div><button onClick={() => setModal("")} className="p-2 bg-neutral-100 rounded-full"><X size={18}/></button></div>
           <div className="overflow-y-auto p-4 space-y-2">{menu.map((m) => <div key={m.id} className="bg-neutral-50 rounded-xl p-3 flex items-center justify-between gap-2"><div className="min-w-0"><p className="font-bold text-sm truncate">{m.name}</p><p className="text-[10px] text-neutral-500">{m.category} • Jual {money(m.price)} • HPP {money(m.cost)}</p></div><div className="flex gap-1 shrink-0"><button onClick={() => {setEditingMenu({...m,price:String(m.price),cost:String(m.cost)});setModal("edit");}} className="p-2 bg-white border rounded-lg text-blue-600"><Pencil size={16}/></button><button onClick={() => removeMenu(m.id)} className="p-2 bg-white border rounded-lg text-red-500"><Trash2 size={16}/></button></div></div>)}</div>
