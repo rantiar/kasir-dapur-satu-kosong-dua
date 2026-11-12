@@ -1,0 +1,6 @@
+{
+  "appId": "id.dapursatukosongdua.kasir",
+  "appName": "Dapur Satu Kosong Dua",
+  "webDir": "dist",
+  "bundledWebRuntime": false
+}
