@@ -187,6 +187,8 @@ export default function App() {
   const [editingMenu, setEditingMenu] = useState(null);
   const [menuImages, setMenuImages] = useState({});
   const [savingMenuImage, setSavingMenuImage] = useState(false);
+  const [storageInfo, setStorageInfo] = useState({ supported: false, persistent: false, usage: 0, quota: 0, loading: true });
+  const [requestingStorage, setRequestingStorage] = useState(false);
   const [toast, setToast] = useState("");
   const [receipt, setReceipt] = useState(null);
 
@@ -196,8 +198,50 @@ export default function App() {
   const [qrisConfirmed, setQrisConfirmed] = useState(false);
   const [savingQris, setSavingQris] = useState(false);
 
+  const refreshStorageInfo = async () => {
+    if (!navigator.storage?.estimate) {
+      setStorageInfo({ supported: false, persistent: false, usage: 0, quota: 0, loading: false });
+      return;
+    }
+    try {
+      const [estimate, persistent] = await Promise.all([
+        navigator.storage.estimate(),
+        navigator.storage.persisted ? navigator.storage.persisted() : Promise.resolve(false)
+      ]);
+      setStorageInfo({
+        supported: true,
+        persistent,
+        usage: estimate.usage || 0,
+        quota: estimate.quota || 0,
+        loading: false
+      });
+    } catch {
+      setStorageInfo((old) => ({ ...old, supported: false, loading: false }));
+    }
+  };
+
+  const requestPersistentStorage = async () => {
+    if (!navigator.storage?.persist) {
+      setToast("Fitur penyimpanan permanen tidak didukung browser ini.");
+      return;
+    }
+    setRequestingStorage(true);
+    try {
+      const granted = await navigator.storage.persist();
+      await refreshStorageInfo();
+      setToast(granted
+        ? "Perlindungan penyimpanan berhasil diaktifkan."
+        : "Browser belum memberikan izin penyimpanan permanen. Buat backup secara berkala.");
+    } catch {
+      setToast("Tidak dapat mengaktifkan perlindungan penyimpanan.");
+    } finally {
+      setRequestingStorage(false);
+    }
+  };
+
   useEffect(() => {
     getMenuImages().then(setMenuImages).catch((error) => console.error("Gagal memuat foto menu:", error));
+    refreshStorageInfo();
   }, []);
 
   useEffect(() => {
@@ -1093,6 +1137,42 @@ export default function App() {
                   <p className="text-xs text-[#fbf6ef]0">Atur menu, harga, modal, dan QRIS</p>
                 </div>
                 <button onClick={() => setModal("")} className="p-2 bg-[#f2e9df] rounded-full"><X size={18} /></button>
+              </div>
+
+              {/* STATUS PENYIMPANAN PERANGKAT */}
+              <div className="p-4 border-b">
+                <p className="font-black text-sm mb-1">Status Penyimpanan Perangkat</p>
+                {storageInfo.loading ? (
+                  <p className="text-xs text-[#a58e7e]">Memeriksa kapasitas penyimpanan...</p>
+                ) : storageInfo.supported ? (
+                  <>
+                    <div className="rounded-xl bg-[#f7f0e8] p-3 mb-3">
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="text-xs font-bold text-[#493329]">Perlindungan data browser</span>
+                        <span className={`text-[10px] font-black px-2 py-1 rounded-full ${storageInfo.persistent ? "bg-[#e4efe4] text-[#38633d]" : "bg-[#f8e7df] text-[#9b4e36]"}`}>
+                          {storageInfo.persistent ? "Aktif" : "Belum aktif"}
+                        </span>
+                      </div>
+                      <p className="text-[11px] text-[#76503f] mt-2">
+                        Terpakai {storageInfo.usage ? (storageInfo.usage / (1024 * 1024)).toFixed(1) : "0"} MB
+                        {storageInfo.quota ? ` dari ${(storageInfo.quota / (1024 * 1024)).toFixed(0)} MB` : ""}
+                      </p>
+                      {storageInfo.quota > 0 && (
+                        <div className="h-2 rounded-full bg-[#e7d9cb] overflow-hidden mt-2">
+                          <div className="h-full bg-[#ad5d42] rounded-full" style={{ width: `${Math.min(100, (storageInfo.usage / storageInfo.quota) * 100)}%` }} />
+                        </div>
+                      )}
+                    </div>
+                    <button type="button" onClick={requestPersistentStorage} disabled={requestingStorage || storageInfo.persistent} className="w-full py-3 rounded-xl bg-[#76503f] text-white text-xs font-bold disabled:opacity-50">
+                      {requestingStorage ? "Memproses..." : storageInfo.persistent ? "Perlindungan Penyimpanan Aktif" : "Aktifkan Perlindungan Penyimpanan"}
+                    </button>
+                  </>
+                ) : (
+                  <p className="text-xs text-[#a58e7e]">Informasi kapasitas belum didukung browser ini.</p>
+                )}
+                <p className="text-[10px] text-[#a58e7e] mt-2 leading-relaxed">
+                  Fitur ini membantu mencegah data browser dibersihkan otomatis, tetapi bukan pengganti backup. SD Card dan USB OTG memerlukan integrasi Android tambahan.
+                </p>
               </div>
 
               {/* PANEL BACKUP & RESTORE */}
