@@ -384,11 +384,13 @@ export default function App() {
     }
 
     try {
+      const savedMenuImages = await getMenuImages();
       const backup = {
         app: "Dapur Satu Kosong Dua",
-        version: 1,
+        version: 2,
         exportedAt: new Date().toISOString(),
         menu,
+        menuImages: savedMenuImages,
         orders,
         qrisImage
       };
@@ -454,7 +456,12 @@ export default function App() {
         backup.app !== "Dapur Satu Kosong Dua" ||
         !validMenu ||
         !validOrders ||
-        (backup.qrisImage != null && typeof backup.qrisImage !== "string")
+        (backup.qrisImage != null && typeof backup.qrisImage !== "string") ||
+        (backup.menuImages != null && (
+          typeof backup.menuImages !== "object" ||
+          Array.isArray(backup.menuImages) ||
+          Object.values(backup.menuImages).some((image) => typeof image !== "string")
+        ))
       ) {
         throw new Error("Format backup tidak cocok atau file rusak.");
       }
@@ -465,14 +472,17 @@ export default function App() {
         await new Promise((resolve, reject) => {
           const tx = db.transaction(DB_STORE, "readwrite");
           const store = tx.objectStore(DB_STORE);
-          if (backup.qrisImage) {
-            store.put(backup.qrisImage, QRIS_KEY);
-          } else {
-            store.delete(QRIS_KEY);
-          }
+          if (backup.qrisImage) store.put(backup.qrisImage, QRIS_KEY);
+          else store.delete(QRIS_KEY);
+          const keysRequest = store.getAllKeys();
+          keysRequest.onsuccess = () => {
+            keysRequest.result.filter((key) => String(key).startsWith("menu-image-")).forEach((key) => store.delete(key));
+            Object.entries(backup.menuImages || {}).forEach(([id, image]) => store.put(image, `menu-image-${id}`));
+          };
+          keysRequest.onerror = () => tx.abort();
           tx.oncomplete = resolve;
           tx.onerror = () => reject(tx.error);
-          tx.onabort = () => reject(tx.error || new Error("Pemulihan QRIS dibatalkan."));
+          tx.onabort = () => reject(tx.error || new Error("Pemulihan data gambar dibatalkan."));
         });
       } finally {
         db.close();
@@ -484,7 +494,8 @@ export default function App() {
       localStorage.removeItem("d102_qris_image");
 
       setMenu(backup.menu);
-      setOrders(backup.orders);
+       setMenuImages(backup.menuImages || {});
+       setOrders(backup.orders);
       setQrisImage(backup.qrisImage || "");
       setQrisConfirmed(false);
       setCart([]);
