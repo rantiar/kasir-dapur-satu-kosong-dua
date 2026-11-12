@@ -519,7 +519,7 @@ export default function App() {
     <button
       onClick={() => setPage(id)}
       className={`flex-1 flex flex-col items-center gap-1 py-2 text-xs font-bold ${
-        page === id ? "text-[#ad5d42]" : "text-neutral-400"
+        page === id ? "text-[#ad5d42]" : "text-[#a58e7e]"
       }`}
     >
       <Icon size={20} />{label}
@@ -533,8 +533,8 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-neutral-900 flex items-center justify-center font-sans sm:p-4">
-      <div className="w-full h-[100dvh] sm:h-[880px] max-w-md bg-neutral-50 sm:rounded-[2rem] sm:border-[8px] border-neutral-800 shadow-2xl relative overflow-hidden flex flex-col">
+    <div className="min-h-screen bg-[#35241e] flex items-center justify-center font-sans sm:p-4">
+      <div className="w-full h-[100dvh] sm:h-[880px] max-w-md bg-[#fbf6ef] sm:rounded-[2rem] sm:border-[8px] border-[#493329] shadow-2xl relative overflow-hidden flex flex-col">
         <header className="bg-[#ad5d42] text-white pt-8 pb-4 px-5 rounded-b-2xl shadow-md z-10 shrink-0">
           <div className="flex items-center justify-between gap-3">
             <div className="flex items-center gap-3">
@@ -557,14 +557,14 @@ export default function App() {
         </header>
 
         {page === "kasir" && <>
-          <div className="shrink-0 bg-neutral-50 pt-3 px-4 border-b border-neutral-200">
+          <div className="shrink-0 bg-[#fbf6ef] pt-3 px-4 border-b border-[#e7d9cb]">
             <div className="relative mb-3">
-              <Search size={17} className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400" />
+              <Search size={17} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#a58e7e]" />
               <input
                 value={search}
                 onChange={(event) => setSearch(event.target.value)}
                 placeholder="Cari menu..."
-                className="w-full pl-9 pr-3 py-2.5 rounded-xl border border-neutral-200 bg-white text-sm outline-none focus:ring-2 focus:ring-[#ce876b]"
+                className="w-full pl-9 pr-3 py-2.5 rounded-xl border border-[#e7d9cb] bg-white text-sm outline-none focus:ring-2 focus:ring-[#ce876b]"
               />
             </div>
             <div className="flex gap-2 overflow-x-auto no-scrollbar pb-3">
@@ -573,7 +573,7 @@ export default function App() {
                   key={item}
                   onClick={() => setCategory(item)}
                   className={`whitespace-nowrap px-4 py-2 rounded-full text-xs font-bold ${
-                    category === item ? "bg-[#ad5d42] text-white" : "bg-white text-neutral-600 border border-neutral-200"
+                    category === item ? "bg-[#ad5d42] text-white" : "bg-white text-[#665143] border border-[#e7d9cb]"
                   }`}
                 >
                   {item}
@@ -588,7 +588,7 @@ export default function App() {
                 const qty = cart.filter((row) => row.id === item.id)
                   .reduce((sum, row) => sum + row.qty, 0);
                 return (
-                  <div key={item.id} className="bg-white rounded-2xl p-3.5 shadow-sm border border-neutral-100 flex flex-col min-h-[132px] relative">
+                  <div key={item.id} className="bg-white rounded-2xl p-3.5 shadow-sm border border-[#f2e9df] flex flex-col min-h-[132px] relative">
                     {qty > 0 && (
                       <span className="absolute -top-2 -right-2 w-7 h-7 bg-[#f8eee8]0 text-white rounded-full flex items-center justify-center font-bold text-xs">
                         {qty}
@@ -596,12 +596,12 @@ export default function App() {
                     )}
                     <div className="flex-1 mb-3">
                       <p className="text-[9px] font-extrabold text-[#f8eee8]0 mb-1 uppercase tracking-wide">{item.category}</p>
-                      <h3 className="font-bold text-neutral-800 text-sm leading-snug">{item.name}</h3>
-                      <p className="text-neutral-500 font-bold text-sm mt-1">{money(item.price)}</p>
+                      <h3 className="font-bold text-[#493329] text-sm leading-snug">{item.name}</h3>
+                      <p className="text-[#fbf6ef]0 font-bold text-sm mt-1">{money(item.price)}</p>
                     </div>
                     <button
                       onClick={() => selectMenu(item)}
-                      className="w-full py-2.5 bg-neutral-100 text-neutral-700 font-bold text-xs rounded-xl hover:bg-[#f8eee8] hover:text-[#ad5d42] active:scale-95"
+                      className="w-full py-2.5 bg-[#f2e9df] text-[#513d32] font-bold text-xs rounded-xl hover:bg-[#f8eee8] hover:text-[#ad5d42] active:scale-95"
                     >
                       + Tambah
                     </button>
@@ -610,13 +610,13 @@ export default function App() {
               })}
               <button
                 onClick={() => setModal("add")}
-                className="bg-neutral-100 border-2 border-dashed border-neutral-300 rounded-2xl p-4 flex flex-col items-center justify-center gap-2 text-neutral-500 min-h-[132px]"
+                className="bg-[#f2e9df] border-2 border-dashed border-[#d6c4b4] rounded-2xl p-4 flex flex-col items-center justify-center gap-2 text-[#fbf6ef]0 min-h-[132px]"
               >
                 <PlusCircle size={30} /><span className="font-bold text-xs">Menu Baru</span>
               </button>
             </div>
             {filteredMenu.length === 0 && (
-              <p className="text-center text-sm text-neutral-400 py-8">Menu tidak ditemukan.</p>
+              <p className="text-center text-sm text-[#a58e7e] py-8">Menu tidak ditemukan.</p>
             )}
           </main>
 
@@ -646,10 +646,10 @@ export default function App() {
 
         {page === "riwayat" && (
           <main className="flex-1 overflow-y-auto p-4 pb-20">
-            <h2 className="font-black text-xl text-neutral-800 mb-1">Riwayat Transaksi</h2>
-            <p className="text-xs text-neutral-500 mb-4">{orders.length} transaksi tersimpan di perangkat ini</p>
+            <h2 className="font-black text-xl text-[#493329] mb-1">Riwayat Transaksi</h2>
+            <p className="text-xs text-[#fbf6ef]0 mb-4">{orders.length} transaksi tersimpan di perangkat ini</p>
             {orders.length === 0 ? (
-              <div className="text-center py-16 text-neutral-400">
+              <div className="text-center py-16 text-[#a58e7e]">
                 <Receipt size={36} className="mx-auto mb-2" />
                 <p className="text-sm">Belum ada transaksi.</p>
               </div>
@@ -659,17 +659,17 @@ export default function App() {
                 <button
                   key={order.id}
                   onClick={() => setReceipt(order)}
-                  className="w-full bg-white rounded-2xl p-4 mb-3 text-left border border-neutral-100 shadow-sm"
+                  className="w-full bg-white rounded-2xl p-4 mb-3 text-left border border-[#f2e9df] shadow-sm"
                 >
                   <div className="flex justify-between gap-2">
-                    <span className="font-extrabold text-sm text-neutral-800">{new Date(order.date).toLocaleString("id-ID")}</span>
+                    <span className="font-extrabold text-sm text-[#493329]">{new Date(order.date).toLocaleString("id-ID")}</span>
                     <span className="font-black text-[#ad5d42] text-sm">{money(order.total)}</span>
                   </div>
-                  <p className="text-xs text-neutral-500 mt-1">
+                  <p className="text-xs text-[#fbf6ef]0 mt-1">
                     {order.items.reduce((sum, row) => sum + row.qty, 0)} item • {method}
                     {method === "Tunai" ? ` • Kembali ${money(order.change)}` : " • Terbayar"}
                   </p>
-                  <p className="text-[10px] text-neutral-400 mt-2">{order.id}</p>
+                  <p className="text-[10px] text-[#a58e7e] mt-2">{order.id}</p>
                 </button>
               );
             })}
@@ -678,37 +678,37 @@ export default function App() {
 
         {page === "laporan" && (
           <main className="flex-1 overflow-y-auto p-4 pb-20">
-            <h2 className="font-black text-xl text-neutral-800 mb-4">Laporan Penjualan</h2>
+            <h2 className="font-black text-xl text-[#493329] mb-4">Laporan Penjualan</h2>
             <div className="grid grid-cols-2 gap-3 mb-4">
-              <div className="bg-white rounded-2xl p-4 border border-neutral-100">
-                <p className="text-xs text-neutral-500 font-semibold">Omzet Hari Ini</p>
+              <div className="bg-white rounded-2xl p-4 border border-[#f2e9df]">
+                <p className="text-xs text-[#fbf6ef]0 font-semibold">Omzet Hari Ini</p>
                 <p className="font-black text-lg text-[#ad5d42] mt-1">{money(todaySales)}</p>
-                <p className="text-[10px] text-neutral-400">{todayOrders.length} transaksi</p>
+                <p className="text-[10px] text-[#a58e7e]">{todayOrders.length} transaksi</p>
               </div>
-              <div className="bg-white rounded-2xl p-4 border border-neutral-100">
-                <p className="text-xs text-neutral-500 font-semibold">Laba Hari Ini*</p>
+              <div className="bg-white rounded-2xl p-4 border border-[#f2e9df]">
+                <p className="text-xs text-[#fbf6ef]0 font-semibold">Laba Hari Ini*</p>
                 <p className="font-black text-lg text-[#76503f] mt-1">{money(todayProfit)}</p>
-                <p className="text-[10px] text-neutral-400">Berdasarkan HPP menu</p>
+                <p className="text-[10px] text-[#a58e7e]">Berdasarkan HPP menu</p>
               </div>
-              <div className="bg-white rounded-2xl p-4 border border-neutral-100">
-                <p className="text-xs text-neutral-500 font-semibold">Omzet Bulan Ini</p>
-                <p className="font-black text-lg text-neutral-800 mt-1">{money(monthSales)}</p>
-                <p className="text-[10px] text-neutral-400">{monthOrders.length} transaksi</p>
+              <div className="bg-white rounded-2xl p-4 border border-[#f2e9df]">
+                <p className="text-xs text-[#fbf6ef]0 font-semibold">Omzet Bulan Ini</p>
+                <p className="font-black text-lg text-[#493329] mt-1">{money(monthSales)}</p>
+                <p className="text-[10px] text-[#a58e7e]">{monthOrders.length} transaksi</p>
               </div>
-              <div className="bg-white rounded-2xl p-4 border border-neutral-100">
-                <p className="text-xs text-neutral-500 font-semibold">Laba Bulan Ini*</p>
+              <div className="bg-white rounded-2xl p-4 border border-[#f2e9df]">
+                <p className="text-xs text-[#fbf6ef]0 font-semibold">Laba Bulan Ini*</p>
                 <p className="font-black text-lg text-[#76503f] mt-1">{money(monthProfit)}</p>
-                <p className="text-[10px] text-neutral-400">Berdasarkan HPP menu</p>
+                <p className="text-[10px] text-[#a58e7e]">Berdasarkan HPP menu</p>
               </div>
-              <div className="bg-white rounded-2xl p-4 border border-neutral-100">
-                <p className="text-xs text-neutral-500 font-semibold">Total Omzet</p>
-                <p className="font-black text-lg text-neutral-800 mt-1">{money(allSales)}</p>
-                <p className="text-[10px] text-neutral-400">Seluruh riwayat</p>
+              <div className="bg-white rounded-2xl p-4 border border-[#f2e9df]">
+                <p className="text-xs text-[#fbf6ef]0 font-semibold">Total Omzet</p>
+                <p className="font-black text-lg text-[#493329] mt-1">{money(allSales)}</p>
+                <p className="text-[10px] text-[#a58e7e]">Seluruh riwayat</p>
               </div>
-              <div className="bg-white rounded-2xl p-4 border border-neutral-100">
-                <p className="text-xs text-neutral-500 font-semibold">Estimasi Laba*</p>
+              <div className="bg-white rounded-2xl p-4 border border-[#f2e9df]">
+                <p className="text-xs text-[#fbf6ef]0 font-semibold">Estimasi Laba*</p>
                 <p className="font-black text-lg text-[#76503f] mt-1">{money(allProfit)}</p>
-                <p className="text-[10px] text-neutral-400">Seluruh riwayat</p>
+                <p className="text-[10px] text-[#a58e7e]">Seluruh riwayat</p>
               </div>
             </div>
             <div className="bg-amber-50 border border-amber-200 rounded-xl p-3 text-[11px] text-amber-800 leading-relaxed">
@@ -716,14 +716,14 @@ export default function App() {
             </div>
             <div className="bg-white rounded-2xl p-4 mt-3">
               <p className="font-bold text-sm mb-2">Catatan</p>
-              <p className="text-xs text-neutral-500 leading-relaxed">
+              <p className="text-xs text-[#fbf6ef]0 leading-relaxed">
                 Data menu dan riwayat tersimpan di browser/perangkat ini. Gunakan perangkat dan browser yang sama agar data tetap terbaca.
               </p>
             </div>
           </main>
         )}
 
-        <nav className="shrink-0 h-[64px] bg-white border-t border-neutral-200 flex items-center px-4 z-30">
+        <nav className="shrink-0 h-[64px] bg-white border-t border-[#e7d9cb] flex items-center px-4 z-30">
           <NavButton id="kasir" icon={Utensils} label="Kasir" />
           <NavButton id="riwayat" icon={History} label="Riwayat" />
           <NavButton id="laporan" icon={ChartNoAxesCombined} label="Laporan" />
@@ -731,20 +731,20 @@ export default function App() {
 
         {modal === "spicy" && (
           <div className="absolute inset-0 z-50 flex items-center justify-center p-4">
-            <div className="absolute inset-0 bg-neutral-900/60" onClick={() => setModal("")} />
+            <div className="absolute inset-0 bg-[#35241e]/60" onClick={() => setModal("")} />
             <div className="relative bg-white w-full rounded-3xl p-5">
               <div className="flex justify-between items-center mb-2">
                 <h3 className="font-black text-xl">Pilih Level Pedas</h3>
-                <button onClick={() => setModal("")} className="p-2 bg-neutral-100 rounded-full"><X size={18} /></button>
+                <button onClick={() => setModal("")} className="p-2 bg-[#f2e9df] rounded-full"><X size={18} /></button>
               </div>
-              <p className="text-sm text-neutral-500 mb-4">{spicyItem?.name}</p>
+              <p className="text-sm text-[#fbf6ef]0 mb-4">{spicyItem?.name}</p>
               <div className="grid grid-cols-3 gap-2 mb-5">
                 {[1, 2, 3].map((level) => (
                   <button
                     key={level}
                     onClick={() => setSpicyLevel(level)}
                     className={`rounded-xl py-4 font-black border ${
-                      spicyLevel === level ? "bg-[#ad5d42] text-white border-[#ad5d42]" : "bg-white text-neutral-600 border-neutral-200"
+                      spicyLevel === level ? "bg-[#ad5d42] text-white border-[#ad5d42]" : "bg-white text-[#665143] border-[#e7d9cb]"
                     }`}
                   >
                     <Flame className="mx-auto mb-1" size={20} /><span>Level {level}</span>
@@ -763,27 +763,27 @@ export default function App() {
 
         {modal === "cart" && (
           <div className="absolute inset-0 z-50 flex flex-col justify-end">
-            <div className="absolute inset-0 bg-neutral-900/60" onClick={() => setModal("")} />
+            <div className="absolute inset-0 bg-[#35241e]/60" onClick={() => setModal("")} />
             <div className="relative bg-white rounded-t-3xl max-h-[94%] flex flex-col">
               <div className="p-5 border-b flex justify-between items-center">
                 <div>
                   <h2 className="font-black text-xl">Keranjang</h2>
-                  <p className="text-xs text-neutral-500">{totalItems} item dipilih</p>
+                  <p className="text-xs text-[#fbf6ef]0">{totalItems} item dipilih</p>
                 </div>
-                <button onClick={() => setModal("")} className="p-2 bg-neutral-100 rounded-full"><X size={19} /></button>
+                <button onClick={() => setModal("")} className="p-2 bg-[#f2e9df] rounded-full"><X size={19} /></button>
               </div>
 
               <div className="overflow-y-auto p-5 space-y-4">
                 {cart.map((row) => (
                   <div key={row.key} className="flex items-center justify-between gap-3">
                     <div className="min-w-0">
-                      <p className="font-bold text-sm text-neutral-800">
+                      <p className="font-bold text-sm text-[#493329]">
                         {row.name}{row.level ? ` • Level ${row.level}` : ""}
                       </p>
-                      <p className="text-xs text-neutral-500">{money(row.price)} × {row.qty}</p>
+                      <p className="text-xs text-[#fbf6ef]0">{money(row.price)} × {row.qty}</p>
                     </div>
                     <div className="flex items-center gap-2">
-                      <button onClick={() => changeQty(row.key, -1)} className="w-8 h-8 rounded-lg bg-neutral-100 flex items-center justify-center"><Minus size={15} /></button>
+                      <button onClick={() => changeQty(row.key, -1)} className="w-8 h-8 rounded-lg bg-[#f2e9df] flex items-center justify-center"><Minus size={15} /></button>
                       <b className="text-sm">{row.qty}</b>
                       <button onClick={() => changeQty(row.key, 1)} className="w-8 h-8 rounded-lg bg-[#ad5d42] text-white flex items-center justify-center"><Plus size={15} /></button>
                     </div>
@@ -792,9 +792,9 @@ export default function App() {
                 ))}
               </div>
 
-              <div className="p-5 bg-neutral-50 border-t overflow-y-auto">
+              <div className="p-5 bg-[#fbf6ef] border-t overflow-y-auto">
                 <div className="flex justify-between items-center mb-4">
-                  <span className="font-semibold text-neutral-500">Total Bayar</span>
+                  <span className="font-semibold text-[#fbf6ef]0">Total Bayar</span>
                   <b className="text-2xl">{money(total)}</b>
                 </div>
 
@@ -803,7 +803,7 @@ export default function App() {
                   <button
                     onClick={() => choosePayment("Tunai")}
                     className={`flex items-center justify-center gap-2 py-3 rounded-xl border font-bold text-sm ${
-                      paymentMethod === "Tunai" ? "bg-[#ad5d42] text-white border-[#ad5d42]" : "bg-white text-neutral-600 border-neutral-200"
+                      paymentMethod === "Tunai" ? "bg-[#ad5d42] text-white border-[#ad5d42]" : "bg-white text-[#665143] border-[#e7d9cb]"
                     }`}
                   >
                     <Wallet size={18} /> Tunai
@@ -811,7 +811,7 @@ export default function App() {
                   <button
                     onClick={() => choosePayment("QRIS")}
                     className={`flex items-center justify-center gap-2 py-3 rounded-xl border font-bold text-sm ${
-                      paymentMethod === "QRIS" ? "bg-[#ad5d42] text-white border-[#ad5d42]" : "bg-white text-neutral-600 border-neutral-200"
+                      paymentMethod === "QRIS" ? "bg-[#ad5d42] text-white border-[#ad5d42]" : "bg-white text-[#665143] border-[#e7d9cb]"
                     }`}
                   >
                     <QrCode size={18} /> QRIS
@@ -826,7 +826,7 @@ export default function App() {
                       onChange={(event) => setCash(digits(event.target.value))}
                       inputMode="numeric"
                       placeholder="Masukkan nominal uang"
-                      className="w-full bg-white border border-neutral-200 rounded-xl p-3 text-right font-bold text-lg outline-none focus:ring-2 focus:ring-[#ce876b]"
+                      className="w-full bg-white border border-[#e7d9cb] rounded-xl p-3 text-right font-bold text-lg outline-none focus:ring-2 focus:ring-[#ce876b]"
                     />
                     <div className="grid grid-cols-4 gap-2 mt-2">
                       {[['Pas', total], ["20rb", 20000], ["50rb", 50000], ["100rb", 100000]].map(([label, value]) => (
@@ -836,17 +836,17 @@ export default function App() {
                       ))}
                     </div>
                     <div className="flex justify-between p-3 bg-white border rounded-xl mt-3 mb-4">
-                      <span className="text-sm text-neutral-500 font-semibold">Kembalian</span>
-                      <b className={change >= 0 && cashAmount ? "text-[#76503f]" : "text-neutral-400"}>
+                      <span className="text-sm text-[#fbf6ef]0 font-semibold">Kembalian</span>
+                      <b className={change >= 0 && cashAmount ? "text-[#76503f]" : "text-[#a58e7e]"}>
                         {cashAmount ? money(Math.max(0, change)) : "—"}
                       </b>
                     </div>
                   </>
                 ) : (
-                  <div className="bg-white border border-neutral-200 rounded-2xl p-3 mb-4">
+                  <div className="bg-white border border-[#e7d9cb] rounded-2xl p-3 mb-4">
                     <div className="text-center">
                       <p className="font-black text-base">Pembayaran QRIS</p>
-                      <p className="text-xs text-neutral-500 mt-1">Minta pembeli memindai kode berikut.</p>
+                      <p className="text-xs text-[#fbf6ef]0 mt-1">Minta pembeli memindai kode berikut.</p>
                     </div>
                     {qrisImage ? (
                       <img
@@ -855,7 +855,7 @@ export default function App() {
                         className="w-full max-h-64 object-contain my-3 rounded-xl"
                       />
                     ) : (
-                      <div className="my-3 border-2 border-dashed rounded-xl p-6 text-center text-sm text-neutral-500">
+                      <div className="my-3 border-2 border-dashed rounded-xl p-6 text-center text-sm text-[#fbf6ef]0">
                         QRIS belum diunggah. Buka Pengaturan untuk mengunggah gambar QRIS.
                       </div>
                     )}
@@ -864,7 +864,7 @@ export default function App() {
                       <p className="text-2xl font-black text-[#ad5d42]">{money(total)}</p>
                     </div>
                     <label className={`mt-3 flex items-start gap-2 text-xs leading-relaxed ${
-                      qrisImage ? "text-neutral-700" : "text-neutral-400"
+                      qrisImage ? "text-[#513d32]" : "text-[#a58e7e]"
                     }`}>
                       <input
                         type="checkbox"
@@ -885,7 +885,7 @@ export default function App() {
                 <button
                   disabled={!canPay}
                   onClick={finishPayment}
-                  className="w-full py-4 rounded-xl bg-[#ad5d42] text-white font-black disabled:bg-neutral-200 disabled:text-neutral-400"
+                  className="w-full py-4 rounded-xl bg-[#ad5d42] text-white font-black disabled:bg-[#e7d9cb] disabled:text-[#a58e7e]"
                 >
                   {paymentMethod === "QRIS" ? "Konfirmasi & Selesaikan Transaksi" : "Selesaikan Transaksi"}
                 </button>
@@ -896,29 +896,29 @@ export default function App() {
 
         {modal === "add" && (
           <div className="absolute inset-0 z-50 flex items-center justify-center p-4">
-            <div className="absolute inset-0 bg-neutral-900/60" onClick={() => setModal("")} />
+            <div className="absolute inset-0 bg-[#35241e]/60" onClick={() => setModal("")} />
             <form onSubmit={addNewMenu} className="relative bg-white w-full rounded-3xl p-5 space-y-3">
               <div className="flex justify-between items-center">
                 <h3 className="font-black text-xl">Tambah Menu</h3>
-                <button type="button" onClick={() => setModal("")} className="p-2 bg-neutral-100 rounded-full"><X size={18} /></button>
+                <button type="button" onClick={() => setModal("")} className="p-2 bg-[#f2e9df] rounded-full"><X size={18} /></button>
               </div>
               <label className="block text-xs font-bold">
                 Nama Menu
-                <input required value={newMenu.name} onChange={(event) => setNewMenu({ ...newMenu, name: event.target.value })} className="w-full mt-1 p-3 bg-neutral-50 border rounded-xl text-sm font-normal" placeholder="Nama menu" />
+                <input required value={newMenu.name} onChange={(event) => setNewMenu({ ...newMenu, name: event.target.value })} className="w-full mt-1 p-3 bg-[#fbf6ef] border rounded-xl text-sm font-normal" placeholder="Nama menu" />
               </label>
               <label className="block text-xs font-bold">
                 Kategori
-                <select value={newMenu.category} onChange={(event) => setNewMenu({ ...newMenu, category: event.target.value })} className="w-full mt-1 p-3 bg-neutral-50 border rounded-xl text-sm">
+                <select value={newMenu.category} onChange={(event) => setNewMenu({ ...newMenu, category: event.target.value })} className="w-full mt-1 p-3 bg-[#fbf6ef] border rounded-xl text-sm">
                   {CATEGORIES.filter((item) => item !== "Semua").map((item) => <option key={item}>{item}</option>)}
                 </select>
               </label>
               <label className="block text-xs font-bold">
                 Harga Jual (Rp)
-                <input required inputMode="numeric" value={newMenu.price ? Number(digits(newMenu.price)).toLocaleString("id-ID") : ""} onChange={(event) => setNewMenu({ ...newMenu, price: digits(event.target.value) })} className="w-full mt-1 p-3 bg-neutral-50 border rounded-xl text-sm" placeholder="0" />
+                <input required inputMode="numeric" value={newMenu.price ? Number(digits(newMenu.price)).toLocaleString("id-ID") : ""} onChange={(event) => setNewMenu({ ...newMenu, price: digits(event.target.value) })} className="w-full mt-1 p-3 bg-[#fbf6ef] border rounded-xl text-sm" placeholder="0" />
               </label>
               <label className="block text-xs font-bold">
                 Modal / HPP per porsi (Rp)
-                <input inputMode="numeric" value={newMenu.cost ? Number(digits(newMenu.cost)).toLocaleString("id-ID") : ""} onChange={(event) => setNewMenu({ ...newMenu, cost: digits(event.target.value) })} className="w-full mt-1 p-3 bg-neutral-50 border rounded-xl text-sm" placeholder="Isi agar laba terhitung" />
+                <input inputMode="numeric" value={newMenu.cost ? Number(digits(newMenu.cost)).toLocaleString("id-ID") : ""} onChange={(event) => setNewMenu({ ...newMenu, cost: digits(event.target.value) })} className="w-full mt-1 p-3 bg-[#fbf6ef] border rounded-xl text-sm" placeholder="Isi agar laba terhitung" />
               </label>
               <button className="w-full bg-[#ad5d42] text-white py-3.5 rounded-xl font-bold">Simpan Menu</button>
             </form>
@@ -927,25 +927,25 @@ export default function App() {
 
         {modal === "qris" && (
           <div className="absolute inset-0 z-[60] flex items-center justify-center p-4">
-            <div className="absolute inset-0 bg-neutral-900/60" onClick={() => setModal("manage")} />
+            <div className="absolute inset-0 bg-[#35241e]/60" onClick={() => setModal("manage")} />
             <div className="relative bg-white w-full rounded-3xl p-5 space-y-4 max-h-[90%] overflow-y-auto">
               <div className="flex justify-between items-center gap-2">
                 <div>
                   <h3 className="font-black text-xl">Pengaturan QRIS</h3>
-                  <p className="text-xs text-neutral-500">QRIS Dapur Satu Kosong Dua</p>
+                  <p className="text-xs text-[#fbf6ef]0">QRIS Dapur Satu Kosong Dua</p>
                 </div>
-                <button onClick={() => setModal("manage")} className="p-2 bg-neutral-100 rounded-full"><X size={18} /></button>
+                <button onClick={() => setModal("manage")} className="p-2 bg-[#f2e9df] rounded-full"><X size={18} /></button>
               </div>
 
               {qrisLoading ? (
-                <div className="p-8 text-center text-sm text-neutral-400">Memuat gambar QRIS...</div>
+                <div className="p-8 text-center text-sm text-[#a58e7e]">Memuat gambar QRIS...</div>
               ) : qrisImage ? (
                 <div className="border rounded-2xl p-3">
                   <img src={qrisImage} alt="QRIS tersimpan" className="w-full max-h-72 object-contain rounded-xl" />
                   <p className="text-center text-xs text-[#76503f] font-bold mt-2">QRIS tersimpan di perangkat ini</p>
                 </div>
               ) : (
-                <div className="border-2 border-dashed rounded-2xl p-8 text-center text-neutral-400">
+                <div className="border-2 border-dashed rounded-2xl p-8 text-center text-[#a58e7e]">
                   <QrCode size={42} className="mx-auto mb-2" />
                   <p className="text-sm font-bold">Belum ada gambar QRIS</p>
                   <p className="text-xs mt-1">Unggah QRIS dari galeri HP.</p>
@@ -963,36 +963,36 @@ export default function App() {
                   Hapus Gambar QRIS
                 </button>
               )}
-              <p className="text-[10px] text-neutral-400 leading-relaxed">
+              <p className="text-[10px] text-[#a58e7e] leading-relaxed">
                 Gambar diperkecil dan disimpan menggunakan IndexedDB di browser HP ini. Jika data browser dihapus atau berganti perangkat/browser, gambar perlu diunggah kembali.
               </p>
-              <button onClick={() => setModal("manage")} className="w-full bg-neutral-900 text-white py-3 rounded-xl font-bold">Selesai</button>
+              <button onClick={() => setModal("manage")} className="w-full bg-[#35241e] text-white py-3 rounded-xl font-bold">Selesai</button>
             </div>
           </div>
         )}
 
         {modal === "manage" && (
           <div className="absolute inset-0 z-50 flex flex-col justify-end">
-            <div className="absolute inset-0 bg-neutral-900/60" onClick={() => setModal("")} />
+            <div className="absolute inset-0 bg-[#35241e]/60" onClick={() => setModal("")} />
             <div className="relative bg-white rounded-t-3xl max-h-[88%] flex flex-col">
               <div className="p-5 border-b flex justify-between items-center">
                 <div>
                   <h3 className="font-black text-xl">Pengaturan & Kelola Menu</h3>
-                  <p className="text-xs text-neutral-500">Atur menu, harga, modal, dan QRIS</p>
+                  <p className="text-xs text-[#fbf6ef]0">Atur menu, harga, modal, dan QRIS</p>
                 </div>
-                <button onClick={() => setModal("")} className="p-2 bg-neutral-100 rounded-full"><X size={18} /></button>
+                <button onClick={() => setModal("")} className="p-2 bg-[#f2e9df] rounded-full"><X size={18} /></button>
               </div>
 
               {/* PANEL BACKUP & RESTORE */}
               <div className="p-4 border-b">
                 <p className="font-black text-sm mb-1">Keamanan Data</p>
-                <p className="text-xs text-neutral-500 mb-3">Simpan atau pulihkan seluruh data warung, termasuk QRIS.</p>
+                <p className="text-xs text-[#fbf6ef]0 mb-3">Simpan atau pulihkan seluruh data warung, termasuk QRIS.</p>
                 <div className="grid grid-cols-2 gap-3">
                   <button
                     type="button"
                     onClick={backupData}
                     disabled={qrisLoading || savingQris}
-                    className="bg-[#76503f] disabled:bg-neutral-300 text-white rounded-xl p-4 flex flex-col items-center gap-2 font-bold text-xs"
+                    className="bg-[#76503f] disabled:bg-[#d6c4b4] text-white rounded-xl p-4 flex flex-col items-center gap-2 font-bold text-xs"
                   >
                     <Download size={24} />
                     Backup Data
@@ -1019,8 +1019,8 @@ export default function App() {
                   <span className="flex items-center gap-3">
                     <span className="bg-[#ad5d42] text-white p-2 rounded-lg"><QrCode size={20} /></span>
                     <span>
-                      <span className="block font-black text-sm text-neutral-800">Pengaturan QRIS</span>
-                      <span className="block text-xs text-neutral-500">{qrisImage ? "Gambar QRIS sudah tersedia" : "Unggah gambar QRIS dari galeri"}</span>
+                      <span className="block font-black text-sm text-[#493329]">Pengaturan QRIS</span>
+                      <span className="block text-xs text-[#fbf6ef]0">{qrisImage ? "Gambar QRIS sudah tersedia" : "Unggah gambar QRIS dari galeri"}</span>
                     </span>
                   </span>
                   <span className="text-[#ad5d42] text-xs font-bold">Buka</span>
@@ -1028,14 +1028,14 @@ export default function App() {
               </div>
               <div className="px-5 pt-3 pb-1">
                 <p className="font-bold text-sm">Daftar Menu</p>
-                <p className="text-xs text-neutral-500">Ubah harga jual dan modal/HPP</p>
+                <p className="text-xs text-[#fbf6ef]0">Ubah harga jual dan modal/HPP</p>
               </div>
               <div className="overflow-y-auto p-4 pt-2 space-y-2">
                 {menu.map((item) => (
-                  <div key={item.id} className="bg-neutral-50 rounded-xl p-3 flex items-center justify-between gap-2">
+                  <div key={item.id} className="bg-[#fbf6ef] rounded-xl p-3 flex items-center justify-between gap-2">
                     <div className="min-w-0">
                       <p className="font-bold text-sm truncate">{item.name}</p>
-                      <p className="text-[10px] text-neutral-500">{item.category} • Jual {money(item.price)} • HPP {money(item.cost)}</p>
+                      <p className="text-[10px] text-[#fbf6ef]0">{item.category} • Jual {money(item.price)} • HPP {money(item.cost)}</p>
                     </div>
                     <div className="flex gap-1 shrink-0">
                       <button onClick={() => { setEditingMenu({ ...item, price: String(item.price), cost: String(item.cost) }); setModal("edit"); }} className="p-2 bg-white border rounded-lg text-[#ad5d42]"><Pencil size={16} /></button>
@@ -1053,29 +1053,29 @@ export default function App() {
 
         {modal === "edit" && editingMenu && (
           <div className="absolute inset-0 z-[60] flex items-center justify-center p-4">
-            <div className="absolute inset-0 bg-neutral-900/60" onClick={() => { setEditingMenu(null); setModal("manage"); }} />
+            <div className="absolute inset-0 bg-[#35241e]/60" onClick={() => { setEditingMenu(null); setModal("manage"); }} />
             <form onSubmit={saveMenuEdit} className="relative bg-white w-full rounded-3xl p-5 space-y-3">
               <div className="flex justify-between items-center">
                 <h3 className="font-black text-xl">Edit Menu</h3>
-                <button type="button" onClick={() => { setEditingMenu(null); setModal("manage"); }} className="p-2 bg-neutral-100 rounded-full"><X size={18} /></button>
+                <button type="button" onClick={() => { setEditingMenu(null); setModal("manage"); }} className="p-2 bg-[#f2e9df] rounded-full"><X size={18} /></button>
               </div>
               <label className="block text-xs font-bold">
                 Nama
-                <input required value={editingMenu.name} onChange={(event) => setEditingMenu({ ...editingMenu, name: event.target.value })} className="w-full mt-1 p-3 bg-neutral-50 border rounded-xl text-sm font-normal" />
+                <input required value={editingMenu.name} onChange={(event) => setEditingMenu({ ...editingMenu, name: event.target.value })} className="w-full mt-1 p-3 bg-[#fbf6ef] border rounded-xl text-sm font-normal" />
               </label>
               <label className="block text-xs font-bold">
                 Kategori
-                <select value={editingMenu.category} onChange={(event) => setEditingMenu({ ...editingMenu, category: event.target.value })} className="w-full mt-1 p-3 bg-neutral-50 border rounded-xl text-sm">
+                <select value={editingMenu.category} onChange={(event) => setEditingMenu({ ...editingMenu, category: event.target.value })} className="w-full mt-1 p-3 bg-[#fbf6ef] border rounded-xl text-sm">
                   {CATEGORIES.filter((item) => item !== "Semua").map((item) => <option key={item}>{item}</option>)}
                 </select>
               </label>
               <label className="block text-xs font-bold">
                 Harga Jual
-                <input required inputMode="numeric" value={editingMenu.price ? Number(digits(editingMenu.price)).toLocaleString("id-ID") : ""} onChange={(event) => setEditingMenu({ ...editingMenu, price: digits(event.target.value) })} className="w-full mt-1 p-3 bg-neutral-50 border rounded-xl text-sm" />
+                <input required inputMode="numeric" value={editingMenu.price ? Number(digits(editingMenu.price)).toLocaleString("id-ID") : ""} onChange={(event) => setEditingMenu({ ...editingMenu, price: digits(event.target.value) })} className="w-full mt-1 p-3 bg-[#fbf6ef] border rounded-xl text-sm" />
               </label>
               <label className="block text-xs font-bold">
                 Modal / HPP
-                <input inputMode="numeric" value={editingMenu.cost ? Number(digits(editingMenu.cost)).toLocaleString("id-ID") : ""} onChange={(event) => setEditingMenu({ ...editingMenu, cost: digits(event.target.value) })} className="w-full mt-1 p-3 bg-neutral-50 border rounded-xl text-sm" />
+                <input inputMode="numeric" value={editingMenu.cost ? Number(digits(editingMenu.cost)).toLocaleString("id-ID") : ""} onChange={(event) => setEditingMenu({ ...editingMenu, cost: digits(event.target.value) })} className="w-full mt-1 p-3 bg-[#fbf6ef] border rounded-xl text-sm" />
               </label>
               <button className="w-full bg-[#ad5d42] text-white py-3.5 rounded-xl font-bold">Simpan Perubahan</button>
             </form>
@@ -1084,13 +1084,13 @@ export default function App() {
 
         {receipt && (
           <div className="absolute inset-0 z-[70] flex items-center justify-center p-4">
-            <div className="absolute inset-0 bg-neutral-900/60" onClick={() => setReceipt(null)} />
+            <div className="absolute inset-0 bg-[#35241e]/60" onClick={() => setReceipt(null)} />
             <div className="relative bg-white w-full rounded-3xl p-5 max-h-[85%] overflow-y-auto">
               <div className="text-center mb-4">
                 <div className="w-12 h-12 bg-green-100 text-[#76503f] rounded-full mx-auto flex items-center justify-center mb-2"><CheckCircle2 size={27} /></div>
                 <h3 className="font-black text-xl">Detail Transaksi</h3>
-                <p className="text-[10px] text-neutral-400">{receipt.id}</p>
-                <p className="text-xs text-neutral-500">{new Date(receipt.date).toLocaleString("id-ID")}</p>
+                <p className="text-[10px] text-[#a58e7e]">{receipt.id}</p>
+                <p className="text-xs text-[#fbf6ef]0">{new Date(receipt.date).toLocaleString("id-ID")}</p>
               </div>
               <div className="border-y py-3 space-y-2">
                 {receipt.items.map((row, index) => (
@@ -1116,13 +1116,13 @@ export default function App() {
                   <p className="text-xs text-[#76503f] font-bold text-right">✓ Pembayaran telah dikonfirmasi kasir</p>
                 )}
               </div>
-              <button onClick={() => setReceipt(null)} className="w-full bg-neutral-900 text-white py-3 rounded-xl font-bold mt-2">Tutup</button>
+              <button onClick={() => setReceipt(null)} className="w-full bg-[#35241e] text-white py-3 rounded-xl font-bold mt-2">Tutup</button>
             </div>
           </div>
         )}
 
         {toast && (
-          <div className="absolute top-24 left-1/2 -translate-x-1/2 z-[80] bg-neutral-900 text-white px-4 py-3 rounded-full shadow-xl flex items-center gap-2 text-xs font-bold whitespace-nowrap max-w-[92%]">
+          <div className="absolute top-24 left-1/2 -translate-x-1/2 z-[80] bg-[#35241e] text-white px-4 py-3 rounded-full shadow-xl flex items-center gap-2 text-xs font-bold whitespace-nowrap max-w-[92%]">
             <CheckCircle2 size={17} className="text-green-400 shrink-0" />{toast}
           </div>
         )}
