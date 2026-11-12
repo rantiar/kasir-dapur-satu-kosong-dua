@@ -114,6 +114,16 @@ const saveMenuImage = async (id, imageData) => {
     tx.onabort = () => { db.close(); reject(tx.error || new Error("Penyimpanan foto menu dibatalkan.")); };
   });
 };
+const deleteMenuImage = async (id) => {
+  const db = await openQrisDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(DB_STORE, "readwrite");
+    tx.objectStore(DB_STORE).delete(`menu-image-${id}`);
+    tx.oncomplete = () => { db.close(); resolve(); };
+    tx.onerror = () => { db.close(); reject(tx.error); };
+    tx.onabort = () => { db.close(); reject(tx.error || new Error("Penghapusan foto dibatalkan.")); };
+  });
+};
 const getMenuImages = async () => {
   const db = await openQrisDB();
   return new Promise((resolve, reject) => {
@@ -518,7 +528,13 @@ export default function App() {
     event.preventDefault();
     if (!editingMenu?.name.trim() || Number(digits(editingMenu.price)) <= 0) return;
     try {
-      if (editingMenu.image) { await saveMenuImage(editingMenu.id, editingMenu.image); setMenuImages((old) => ({ ...old, [editingMenu.id]: editingMenu.image })); }
+      if (editingMenu.image === null) {
+        await deleteMenuImage(editingMenu.id);
+        setMenuImages((old) => { const next = { ...old }; delete next[editingMenu.id]; return next; });
+      } else if (editingMenu.image) {
+        await saveMenuImage(editingMenu.id, editingMenu.image);
+        setMenuImages((old) => ({ ...old, [editingMenu.id]: editingMenu.image }));
+      }
       setMenu((old) => old.map((item) => item.id === editingMenu.id ? { ...item, name: editingMenu.name.trim(), price: Number(digits(editingMenu.price)), cost: Number(digits(editingMenu.cost)), category: editingMenu.category } : item));
       setEditingMenu(null); setToast("Menu berhasil diperbarui.");
     } catch (error) { setToast(error?.message || "Perubahan menu gagal disimpan."); }
