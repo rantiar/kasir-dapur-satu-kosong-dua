@@ -3,7 +3,7 @@ import {
   Flame, ShoppingCart, Plus, Minus, X, CheckCircle2,
   PlusCircle, History, ChartNoAxesCombined, Trash2, Pencil,
   Receipt, Search, Settings, Utensils, QrCode, Wallet,
-  ImagePlus, Check, AlertCircle
+  ImagePlus, Check, AlertCircle, Download, Upload
 } from "lucide-react";
 
 const CATEGORIES = ["Semua", "Seblak", "Topping Seblak", "Tempura Lava", "Tahu Kocek"];
@@ -184,7 +184,19 @@ export default function App() {
     let active = true;
     (async () => {
       try {
-        const stored = await getQrisImage();
+        let stored = await getQrisImage();
+
+        // Migrasikan QRIS versi lama dari Local Storage ke IndexedDB
+        // agar gambar yang pernah diunggah tidak hilang setelah pembaruan.
+        if (!stored) {
+          const oldImage = localStorage.getItem("d102_qris_image");
+          if (oldImage) {
+            await saveQrisImage(oldImage);
+            stored = oldImage;
+            localStorage.removeItem("d102_qris_image");
+          }
+        }
+
         if (active) setQrisImage(stored);
       } catch {
         if (active) setToast("Gagal memuat gambar QRIS dari penyimpanan HP.");
@@ -326,6 +338,130 @@ export default function App() {
       setToast("Gambar QRIS berhasil dihapus.");
     } catch {
       setToast("Gagal menghapus gambar QRIS.");
+    }
+  };
+
+  // BACKUP: menu, riwayat transaksi, dan gambar QRIS dijadikan satu file JSON.
+  const backupData = async () => {
+    if (qrisLoading || savingQris) {
+      setToast("Tunggu QRIS selesai dimuat atau disimpan.");
+      return;
+    }
+
+    try {
+      const backup = {
+        app: "Dapur Satu Kosong Dua",
+        version: 1,
+        exportedAt: new Date().toISOString(),
+        menu,
+        orders,
+        qrisImage
+      };
+
+      const blob = new Blob(
+        [JSON.stringify(backup, null, 2)],
+        { type: "application/json" }
+      );
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `backup-dapur-satu-kosong-dua-${new Date().toISOString().slice(0, 10)}.json`;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.setTimeout(() => URL.revokeObjectURL(url), 1500);
+      setToast("Backup berhasil dibuat. Periksa folder Download.");
+    } catch (error) {
+      console.error("Backup gagal:", error);
+      setToast("Gagal membuat backup. Coba lagi.");
+    }
+  };
+
+  // RESTORE: mengembalikan menu, transaksi, dan QRIS dari file backup.
+  const restoreData = async (event) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    if (qrisLoading || savingQris) {
+      setToast("Tunggu QRIS selesai dimuat atau disimpan.");
+      event.target.value = "";
+      return;
+    }
+
+    if (!window.confirm(
+      "Data menu, riwayat transaksi, dan QRIS saat ini akan diganti dengan isi backup. Pastikan file backup benar. Lanjutkan?"
+    )) {
+      event.target.value = "";
+      return;
+    }
+
+    try {
+      const content = await file.text();
+      const backup = JSON.parse(content);
+
+      const validMenu = Array.isArray(backup.menu) && backup.menu.every((item) =>
+        item &&
+        (typeof item.id === "string" || typeof item.id === "number") &&
+        typeof item.name === "string" &&
+        typeof item.category === "string" &&
+        Number.isFinite(Number(item.price))
+      );
+
+      const validOrders = Array.isArray(backup.orders) && backup.orders.every((order) =>
+        order &&
+        (typeof order.id === "string" || typeof order.id === "number") &&
+        typeof order.date === "string" &&
+        Array.isArray(order.items) &&
+        Number.isFinite(Number(order.total))
+      );
+
+      if (
+        backup.app !== "Dapur Satu Kosong Dua" ||
+        !validMenu ||
+        !validOrders ||
+        (backup.qrisImage != null && typeof backup.qrisImage !== "string")
+      ) {
+        throw new Error("Format backup tidak cocok atau file rusak.");
+      }
+
+      // Simpan QRIS ke IndexedDB, sesuai sistem penyimpanan aplikasi saat ini.
+      const db = await openQrisDB();
+      try {
+        await new Promise((resolve, reject) => {
+          const tx = db.transaction(DB_STORE, "readwrite");
+          const store = tx.objectStore(DB_STORE);
+          if (backup.qrisImage) {
+            store.put(backup.qrisImage, QRIS_KEY);
+          } else {
+            store.delete(QRIS_KEY);
+          }
+          tx.oncomplete = resolve;
+          tx.onerror = () => reject(tx.error);
+          tx.onabort = () => reject(tx.error || new Error("Pemulihan QRIS dibatalkan."));
+        });
+      } finally {
+        db.close();
+      }
+
+      // Simpan ke Local Storage; state React akan mengikuti dan tetap tersimpan.
+      localStorage.setItem("d102_menu_v2", JSON.stringify(backup.menu));
+      localStorage.setItem("d102_orders_v2", JSON.stringify(backup.orders));
+      localStorage.removeItem("d102_qris_image");
+
+      setMenu(backup.menu);
+      setOrders(backup.orders);
+      setQrisImage(backup.qrisImage || "");
+      setQrisConfirmed(false);
+      setCart([]);
+      setCash("");
+      setPaymentMethod("Tunai");
+      setModal("");
+      setToast("Semua data berhasil dipulihkan!");
+    } catch (error) {
+      console.error("Restore gagal:", error);
+      setToast(error?.message || "Restore gagal. Periksa file backup.");
+    } finally {
+      event.target.value = "";
     }
   };
 
@@ -693,7 +829,7 @@ export default function App() {
                       className="w-full bg-white border border-neutral-200 rounded-xl p-3 text-right font-bold text-lg outline-none focus:ring-2 focus:ring-red-400"
                     />
                     <div className="grid grid-cols-4 gap-2 mt-2">
-                      {[["Pas", total], ["20rb", 20000], ["50rb", 50000], ["100rb", 100000]].map(([label, value]) => (
+                      {[['Pas', total], ["20rb", 20000], ["50rb", 50000], ["100rb", 100000]].map(([label, value]) => (
                         <button key={label} onClick={() => setCash(String(value))} className="py-2 rounded-lg bg-white border text-[11px] font-bold">
                           {label}
                         </button>
@@ -846,6 +982,38 @@ export default function App() {
                 </div>
                 <button onClick={() => setModal("")} className="p-2 bg-neutral-100 rounded-full"><X size={18} /></button>
               </div>
+
+              {/* PANEL BACKUP & RESTORE */}
+              <div className="p-4 border-b">
+                <p className="font-black text-sm mb-1">Keamanan Data</p>
+                <p className="text-xs text-neutral-500 mb-3">Simpan atau pulihkan seluruh data warung, termasuk QRIS.</p>
+                <div className="grid grid-cols-2 gap-3">
+                  <button
+                    type="button"
+                    onClick={backupData}
+                    disabled={qrisLoading || savingQris}
+                    className="bg-green-600 disabled:bg-neutral-300 text-white rounded-xl p-4 flex flex-col items-center gap-2 font-bold text-xs"
+                  >
+                    <Download size={24} />
+                    Backup Data
+                  </button>
+                  <label className="bg-blue-600 text-white rounded-xl p-4 flex flex-col items-center gap-2 font-bold text-xs cursor-pointer">
+                    <Upload size={24} />
+                    Restore Data
+                    <input
+                      type="file"
+                      accept=".json,application/json"
+                      onChange={restoreData}
+                      disabled={qrisLoading || savingQris}
+                      className="hidden"
+                    />
+                  </label>
+                </div>
+                <p className="text-[10px] text-amber-700 mt-3 leading-relaxed">
+                  Simpan file backup di tempat aman. Restore akan mengganti menu, riwayat transaksi, dan QRIS yang sedang digunakan.
+                </p>
+              </div>
+
               <div className="p-4 border-b">
                 <button onClick={() => setModal("qris")} className="w-full flex items-center justify-between gap-3 bg-red-50 border border-red-100 rounded-xl p-4 text-left">
                   <span className="flex items-center gap-3">
