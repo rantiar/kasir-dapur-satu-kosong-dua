@@ -99,18 +99,37 @@ const saveQrisImage = async (imageData) => {
   return new Promise((resolve, reject) => {
     const tx = db.transaction(DB_STORE, "readwrite");
     tx.objectStore(DB_STORE).put(imageData, QRIS_KEY);
-    tx.oncomplete = () => {
-      db.close();
-      resolve();
+    tx.oncomplete = () => { db.close(); resolve(); };
+    tx.onerror = () => { db.close(); reject(tx.error); };
+    tx.onabort = () => { db.close(); reject(tx.error || new Error("Penyimpanan dibatalkan.")); };
+  });
+};
+const saveMenuImage = async (id, imageData) => {
+  const db = await openQrisDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(DB_STORE, "readwrite");
+    tx.objectStore(DB_STORE).put(imageData, `menu-image-${id}`);
+    tx.oncomplete = () => { db.close(); resolve(); };
+    tx.onerror = () => { db.close(); reject(tx.error); };
+    tx.onabort = () => { db.close(); reject(tx.error || new Error("Penyimpanan foto menu dibatalkan.")); };
+  });
+};
+const getMenuImages = async () => {
+  const db = await openQrisDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(DB_STORE, "readonly");
+    const store = tx.objectStore(DB_STORE);
+    const request = store.getAllKeys();
+    request.onsuccess = () => {
+      const keys = request.result.filter((key) => String(key).startsWith("menu-image-"));
+      Promise.all(keys.map((key) => new Promise((res, rej) => {
+        const getRequest = store.get(key);
+        getRequest.onsuccess = () => res([String(key).slice(11), getRequest.result]);
+        getRequest.onerror = () => rej(getRequest.error);
+      }))).then((entries) => resolve(Object.fromEntries(entries.filter(([, value]) => value))))
+        .catch(reject).finally(() => db.close());
     };
-    tx.onerror = () => {
-      db.close();
-      reject(tx.error);
-    };
-    tx.onabort = () => {
-      db.close();
-      reject(tx.error || new Error("Penyimpanan dibatalkan."));
-    };
+    request.onerror = () => { db.close(); reject(request.error); };
   });
 };
 
@@ -153,8 +172,10 @@ export default function App() {
   const [modal, setModal] = useState("");
   const [spicyItem, setSpicyItem] = useState(null);
   const [spicyLevel, setSpicyLevel] = useState(1);
-  const [newMenu, setNewMenu] = useState({ name: "", price: "", cost: "", category: "Seblak" });
+  const [newMenu, setNewMenu] = useState({ name: "", price: "", cost: "", category: "Seblak", image: "" });
   const [editingMenu, setEditingMenu] = useState(null);
+  const [menuImages, setMenuImages] = useState({});
+  const [savingMenuImage, setSavingMenuImage] = useState(false);
   const [toast, setToast] = useState("");
   const [receipt, setReceipt] = useState(null);
 
@@ -163,6 +184,10 @@ export default function App() {
   const [paymentMethod, setPaymentMethod] = useState("Tunai");
   const [qrisConfirmed, setQrisConfirmed] = useState(false);
   const [savingQris, setSavingQris] = useState(false);
+
+  useEffect(() => {
+    getMenuImages().then(setMenuImages).catch((error) => console.error("Gagal memuat foto menu:", error));
+  }, []);
 
   useEffect(() => {
     try {
@@ -465,33 +490,38 @@ export default function App() {
     }
   };
 
-  const addNewMenu = (event) => {
+  const handleMenuPhoto = async (event, target) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    if (!file.type.startsWith("image/")) { setToast("Pilih file foto berformat gambar."); event.target.value = ""; return; }
+    if (file.size > 12 * 1024 * 1024) { setToast("Ukuran foto maksimal 12 MB."); event.target.value = ""; return; }
+    setSavingMenuImage(true);
+    try {
+      const image = await compressImage(file);
+      if (target === "new") setNewMenu((old) => ({ ...old, image }));
+      else setEditingMenu((old) => ({ ...old, image }));
+    } catch (error) { setToast(error?.message || "Foto gagal diproses."); }
+    finally { setSavingMenuImage(false); event.target.value = ""; }
+  };
+  const addNewMenu = async (event) => {
     event.preventDefault();
     if (!newMenu.name.trim() || Number(digits(newMenu.price)) <= 0) return;
-    setMenu((old) => [...old, {
-      id: `custom_${Date.now()}`,
-      name: newMenu.name.trim(),
-      price: Number(digits(newMenu.price)),
-      cost: Number(digits(newMenu.cost)),
-      category: newMenu.category
-    }]);
-    setNewMenu({ name: "", price: "", cost: "", category: "Seblak" });
-    setModal("");
-    setToast("Menu baru berhasil ditambahkan.");
+    const id = `custom_${Date.now()}`;
+    try {
+      if (newMenu.image) { await saveMenuImage(id, newMenu.image); setMenuImages((old) => ({ ...old, [id]: newMenu.image })); }
+      setMenu((old) => [...old, { id, name: newMenu.name.trim(), price: Number(digits(newMenu.price)), cost: Number(digits(newMenu.cost)), category: newMenu.category }]);
+      setNewMenu({ name: "", price: "", cost: "", category: "Seblak", image: "" });
+      setModal(""); setToast("Menu baru berhasil ditambahkan.");
+    } catch (error) { setToast(error?.message || "Menu gagal disimpan. Coba lagi."); }
   };
-
-  const saveMenuEdit = (event) => {
+  const saveMenuEdit = async (event) => {
     event.preventDefault();
     if (!editingMenu?.name.trim() || Number(digits(editingMenu.price)) <= 0) return;
-    setMenu((old) => old.map((item) => item.id === editingMenu.id ? {
-      ...item,
-      name: editingMenu.name.trim(),
-      price: Number(digits(editingMenu.price)),
-      cost: Number(digits(editingMenu.cost)),
-      category: editingMenu.category
-    } : item));
-    setEditingMenu(null);
-    setToast("Menu berhasil diperbarui.");
+    try {
+      if (editingMenu.image) { await saveMenuImage(editingMenu.id, editingMenu.image); setMenuImages((old) => ({ ...old, [editingMenu.id]: editingMenu.image })); }
+      setMenu((old) => old.map((item) => item.id === editingMenu.id ? { ...item, name: editingMenu.name.trim(), price: Number(digits(editingMenu.price)), cost: Number(digits(editingMenu.cost)), category: editingMenu.category } : item));
+      setEditingMenu(null); setToast("Menu berhasil diperbarui.");
+    } catch (error) { setToast(error?.message || "Perubahan menu gagal disimpan."); }
   };
 
   const removeMenu = (id) => {
@@ -595,7 +625,8 @@ export default function App() {
                       </span>
                     )}
                     <div className="flex-1 mb-3">
-                      <p className="text-[9px] font-extrabold text-[#f8eee8]0 mb-1 uppercase tracking-wide">{item.category}</p>
+                      {menuImages[item.id] ? <img src={menuImages[item.id]} alt={item.name} className="w-full h-24 object-cover rounded-xl mb-2" /> : <div className="w-full h-24 rounded-xl mb-2 bg-[#f2e9df] flex items-center justify-center text-[#a58e7e]"><ImagePlus size={25} /></div>}
+                      <p className="text-[9px] font-extrabold text-[#ad5d42] mb-1 uppercase tracking-wide">{item.category}</p>
                       <h3 className="font-bold text-[#493329] text-sm leading-snug">{item.name}</h3>
                       <p className="text-[#fbf6ef]0 font-bold text-sm mt-1">{money(item.price)}</p>
                     </div>
@@ -901,6 +932,14 @@ export default function App() {
               <div className="flex justify-between items-center">
                 <h3 className="font-black text-xl">Tambah Menu</h3>
                 <button type="button" onClick={() => setModal("")} className="p-2 bg-[#f2e9df] rounded-full"><X size={18} /></button>
+              </div>
+              <div className="space-y-1">
+                <span className="block text-xs font-bold">Foto Menu (opsional)</span>
+                <label className="flex items-center gap-3 p-3 rounded-xl border border-dashed border-[#d6c4b4] bg-[#fbf6ef] cursor-pointer">
+                  {newMenu.image ? <img src={newMenu.image} alt="Pratinjau foto menu" className="w-16 h-16 object-cover rounded-lg" /> : <span className="w-16 h-16 rounded-lg bg-[#f2e9df] flex items-center justify-center text-[#ad5d42]"><ImagePlus size={24} /></span>}
+                  <span className="text-xs text-[#665143]">{savingMenuImage ? "Memproses foto..." : newMenu.image ? "Pilih foto lain" : "Pilih foto dari galeri HP"}</span>
+                  <input type="file" accept="image/*" onChange={(event) => handleMenuPhoto(event, "new")} className="hidden" />
+                </label>
               </div>
               <label className="block text-xs font-bold">
                 Nama Menu
