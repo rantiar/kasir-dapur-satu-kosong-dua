@@ -974,7 +974,7 @@ export default function App() {
         {modal === "manage" && (
           <div className="absolute inset-0 z-50 flex flex-col justify-end">
             <div className="absolute inset-0 bg-neutral-900/60" onClick={() => setModal("")} />
-            <div className="relative bg-white rounded-t-3xl max-h-[88%] flex flex-col">
+            <div className="relative bg-white rounded-t-3xl h-[88%] max-h-[88%] min-h-0 flex flex-col overflow-y-auto overscroll-contain">
               <div className="p-5 border-b flex justify-between items-center">
                 <div>
                   <h3 className="font-black text-xl">Pengaturan & Kelola Menu</h3>
@@ -1030,7 +1030,7 @@ export default function App() {
                 <p className="font-bold text-sm">Daftar Menu</p>
                 <p className="text-xs text-neutral-500">Ubah harga jual dan modal/HPP</p>
               </div>
-              <div className="overflow-y-auto p-4 pt-2 space-y-2">
+              <div className="p-4 pt-2 space-y-2">
                 {menu.map((item) => (
                   <div key={item.id} className="bg-neutral-50 rounded-xl p-3 flex items-center justify-between gap-2">
                     <div className="min-w-0">
