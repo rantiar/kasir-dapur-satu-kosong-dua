@@ -974,7 +974,7 @@ export default function App() {
         {modal === "manage" && (
           <div className="absolute inset-0 z-50 flex flex-col justify-end">
             <div className="absolute inset-0 bg-neutral-900/60" onClick={() => setModal("")} />
-            <div className="relative bg-white rounded-t-3xl h-[88%] max-h-[88%] min-h-0 flex flex-col overflow-y-auto overscroll-contain">
+            <div className="relative bg-white rounded-t-3xl h-[88%] max-h-[88%] min-h-0 flex flex-col overflow-hidden">
               <div className="p-5 border-b flex justify-between items-center">
                 <div>
                   <h3 className="font-black text-xl">Pengaturan & Kelola Menu</h3>
@@ -983,6 +983,7 @@ export default function App() {
                 <button onClick={() => setModal("")} className="p-2 bg-neutral-100 rounded-full"><X size={18} /></button>
               </div>
 
+              <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain touch-pan-y">
               {/* PANEL BACKUP & RESTORE */}
               <div className="p-4 border-b">
                 <p className="font-black text-sm mb-1">Keamanan Data</p>
@@ -1043,6 +1044,7 @@ export default function App() {
                     </div>
                   </div>
                 ))}
+              </div>
               </div>
               <div className="p-4 border-t">
                 <button onClick={() => setModal("add")} className="w-full bg-red-600 text-white rounded-xl py-3 font-bold">+ Tambah Menu Baru</button>
