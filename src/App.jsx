@@ -731,8 +731,8 @@ export default function App() {
 
         {modal === "spicy" && (
           <div className="absolute inset-0 z-50 flex items-center justify-center p-4">
-            <div className="absolute inset-0 bg-neutral-900/60" onClick={() => setModal("")} />
-            <div className="relative bg-white w-full rounded-3xl p-5">
+            <div className="modal-backdrop absolute inset-0 bg-neutral-900/60" onClick={() => setModal("")} />
+            <div className="modal-panel relative bg-white w-full rounded-3xl p-5">
               <div className="flex justify-between items-center mb-2">
                 <h3 className="font-black text-xl">Pilih Level Pedas</h3>
                 <button onClick={() => setModal("")} className="p-2 bg-neutral-100 rounded-full"><X size={18} /></button>
@@ -763,8 +763,8 @@ export default function App() {
 
         {modal === "cart" && (
           <div className="absolute inset-0 z-50 flex flex-col justify-end">
-            <div className="absolute inset-0 bg-neutral-900/60" onClick={() => setModal("")} />
-            <div className="relative bg-white rounded-t-3xl max-h-[94%] flex flex-col">
+            <div className="modal-backdrop absolute inset-0 bg-neutral-900/60" onClick={() => setModal("")} />
+            <div className="modal-panel relative bg-white rounded-t-3xl max-h-[94%] flex flex-col">
               <div className="p-5 border-b flex justify-between items-center">
                 <div>
                   <h2 className="font-black text-xl">Keranjang</h2>
@@ -896,8 +896,8 @@ export default function App() {
 
         {modal === "add" && (
           <div className="absolute inset-0 z-50 flex items-center justify-center p-4">
-            <div className="absolute inset-0 bg-neutral-900/60" onClick={() => setModal("")} />
-            <form onSubmit={addNewMenu} className="relative bg-white w-full rounded-3xl p-5 space-y-3">
+            <div className="modal-backdrop absolute inset-0 bg-neutral-900/60" onClick={() => setModal("")} />
+            <form onSubmit={addNewMenu} className="modal-panel relative bg-white w-full rounded-3xl p-5 space-y-3">
               <div className="flex justify-between items-center">
                 <h3 className="font-black text-xl">Tambah Menu</h3>
                 <button type="button" onClick={() => setModal("")} className="p-2 bg-neutral-100 rounded-full"><X size={18} /></button>
@@ -927,8 +927,8 @@ export default function App() {
 
         {modal === "qris" && (
           <div className="absolute inset-0 z-[60] flex items-center justify-center p-4">
-            <div className="absolute inset-0 bg-neutral-900/60" onClick={() => setModal("manage")} />
-            <div className="relative bg-white w-full rounded-3xl p-5 space-y-4 max-h-[90%] overflow-y-auto">
+            <div className="modal-backdrop absolute inset-0 bg-neutral-900/60" onClick={() => setModal("manage")} />
+            <div className="modal-panel relative bg-white w-full rounded-3xl p-5 space-y-4 max-h-[90%] overflow-y-auto">
               <div className="flex justify-between items-center gap-2">
                 <div>
                   <h3 className="font-black text-xl">Pengaturan QRIS</h3>
@@ -973,8 +973,8 @@ export default function App() {
 
         {modal === "manage" && (
           <div className="absolute inset-0 z-50 flex flex-col justify-end">
-            <div className="absolute inset-0 bg-neutral-900/60" onClick={() => setModal("")} />
-            <div className="relative bg-white rounded-t-3xl h-[88%] max-h-[88%] min-h-0 flex flex-col overflow-hidden">
+            <div className="modal-backdrop absolute inset-0 bg-neutral-900/60" onClick={() => setModal("")} />
+            <div className="modal-panel relative bg-white rounded-t-3xl h-[88%] max-h-[88%] min-h-0 flex flex-col overflow-hidden">
               <div className="p-5 border-b flex justify-between items-center">
                 <div>
                   <h3 className="font-black text-xl">Pengaturan & Kelola Menu</h3>
@@ -1055,7 +1055,7 @@ export default function App() {
 
         {modal === "edit" && editingMenu && (
           <div className="absolute inset-0 z-[60] flex items-center justify-center p-4">
-            <div className="absolute inset-0 bg-neutral-900/60" onClick={() => { setEditingMenu(null); setModal("manage"); }} />
+            <div className="modal-backdrop absolute inset-0 bg-neutral-900/60" onClick={() => { setEditingMenu(null); setModal("manage"); }} />
             <form onSubmit={saveMenuEdit} className="relative bg-white w-full rounded-3xl p-5 space-y-3">
               <div className="flex justify-between items-center">
                 <h3 className="font-black text-xl">Edit Menu</h3>
@@ -1086,8 +1086,8 @@ export default function App() {
 
         {receipt && (
           <div className="absolute inset-0 z-[70] flex items-center justify-center p-4">
-            <div className="absolute inset-0 bg-neutral-900/60" onClick={() => setReceipt(null)} />
-            <div className="relative bg-white w-full rounded-3xl p-5 max-h-[85%] overflow-y-auto">
+            <div className="modal-backdrop absolute inset-0 bg-neutral-900/60" onClick={() => setReceipt(null)} />
+            <div className="modal-panel relative bg-white w-full rounded-3xl p-5 max-h-[85%] overflow-y-auto">
               <div className="text-center mb-4">
                 <div className="w-12 h-12 bg-green-100 text-green-600 rounded-full mx-auto flex items-center justify-center mb-2"><CheckCircle2 size={27} /></div>
                 <h3 className="font-black text-xl">Detail Transaksi</h3>
@@ -1129,7 +1129,18 @@ export default function App() {
           </div>
         )}
 
-        <style>{`.no-scrollbar::-webkit-scrollbar{display:none}.no-scrollbar{-ms-overflow-style:none;scrollbar-width:none}`}</style>
+        <style>{`
+          .no-scrollbar::-webkit-scrollbar{display:none}
+          .no-scrollbar{-ms-overflow-style:none;scrollbar-width:none}
+          button, a, input, select { transition: transform .16s ease, background-color .2s ease, color .2s ease, box-shadow .2s ease, border-color .2s ease; }
+          button:active { transform: scale(.97); }
+          button:focus-visible { outline: 2px solid #d46b48; outline-offset: 2px; }
+          .modal-backdrop { animation: fadeIn .22s ease-out both; }
+          .modal-panel { animation: modalRise .28s cubic-bezier(.2,.8,.2,1) both; will-change: transform, opacity; }
+          @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+          @keyframes modalRise { from { opacity: 0; transform: translateY(18px) scale(.985); } to { opacity: 1; transform: translateY(0) scale(1); } }
+          @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; } }
+        `}</style>
       </div>
     </div>
   );
